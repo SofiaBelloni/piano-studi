@@ -13,7 +13,12 @@ const port = 3001;
 // set-up the middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cors());   //per l'esame
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+app.use(cors(corsOptions)); //per l'esame
+
 /*** APIs ***/
 
 // GET /api/courses
