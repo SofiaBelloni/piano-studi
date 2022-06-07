@@ -1,6 +1,6 @@
 'use strict'
 
-function Course(code, name, cfu, student, maxStudent, prerequisite, incompatibility=[]){
+function Course(code, name, cfu, student, maxStudent, prerequisite="", incompatibility=[]){
     this.code = code;
     this.name = name;
     this.cfu = cfu;

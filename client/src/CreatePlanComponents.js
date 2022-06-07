@@ -93,25 +93,25 @@ function ExamRow(props) {
     return (
         <>
             <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} handleAdd={props.handleAdd} /></tr>
-            {expand ? <ExamInfo /> : false}
+            {expand ? <ExamInfo exam={props.exam}/> : false}
         </>
     );
 }
 
 function ExamInfo(props) {
     return (
-        <>
-            <tr>
-                <th>Propedeutici</th>
-                <td>ciao</td>
-            </tr>
-            <tr>
-                <th scope="row">Incompatibili</th>
-                <td>ciao</td>
-            </tr>
-        </>
+      <>
+        <tr>
+          <th>Propedeutici</th>
+          <td>{props.exam.prerequisite ? props.exam.prerequisite : "/"}</td>
+        </tr>
+        <tr>
+          <th>Incompatibili</th>
+          <td>ciao</td>
+        </tr>
+      </>
     );
-}
+  }
 
 function ExamData(props) {
     return (
@@ -124,7 +124,7 @@ function ExamData(props) {
             <td><Button onClick={() => { props.moreInfo(props.expand) }}>
                 {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
             <td>
-                <Button onClick={() => props.handleAdd(props.exam.code)}><MdOutlineAdd /></Button>
+                <Button onClick={() => props.handleAdd(props.exam.code)} ><MdOutlineAdd /></Button>
             </td>
         </>
     );

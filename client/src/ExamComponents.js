@@ -44,7 +44,7 @@ function ExamRow(props) {
   return (
     <>
       <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} /></tr>
-      {expand ? <ExamInfo /> : false}
+      {expand ? <ExamInfo exam={props.exam}/> : false}
     </>
   );
 }
@@ -54,10 +54,10 @@ function ExamInfo(props) {
     <>
       <tr>
         <th>Propedeutici</th>
-        <td>ciao</td>
+        <td>{props.exam.prerequisite ? props.exam.prerequisite : "/"}</td>
       </tr>
       <tr>
-        <th scope="row">Incompatibili</th>
+        <th>Incompatibili</th>
         <td>ciao</td>
       </tr>
     </>

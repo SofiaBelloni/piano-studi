@@ -6,15 +6,16 @@ import { ExamList } from './ExamComponents';
 import { MyNavbar } from './NavbarComponents';
 import { LoginForm } from './LoginComponents';
 import { useEffect, useState } from 'react';
+import API from './API';
 
 
 import { CreatePlan } from './CreatePlanComponents';
 
-const fakeExams = [
+/*const fakeExams = [
   { code: '01TYMOV', name: 'Information systems security', cfu: 30, student: 5, maxStudent: 100 },
   { code: '01SQJOV', name: 'Data Science and Database Technology', cfu: 21, student: 5, maxStudent: 100 },
   { code: '04GSPOV', name: 'Software Engineering', cfu: 26, student: 5, maxStudent: 100 }
-];
+];*/
 
 function App() {
   return (
@@ -26,8 +27,17 @@ function App() {
 
 function App2() {
 
+  const [exams, setExams] = useState([]);
   const [loggedIn, setLoggedIn] = useState(true);
   const [user, setUser] = useState({});
+
+  useEffect(() => {
+    // fetch  /api/courses
+    API.getAllCourses()
+      .then((exams) => setExams(exams))
+      .catch( err => console.log(err))
+  }, [])
+
 
   function doLogOut(){
     setLoggedIn(false);
@@ -45,10 +55,9 @@ function App2() {
       <br />
       <Container>
         <Routes>
-          <Route path='/' element={
-            loggedIn ? <CreatePlan exams={fakeExams}></CreatePlan>
-              : <ExamList exams={fakeExams}></ExamList>} />
+          <Route path='/' element={<ExamList exams={exams}></ExamList>} />
           <Route path='/login' element={<LoginForm />} />
+          <Route path='/edit' element={<CreatePlan exams={exams}/>} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>
