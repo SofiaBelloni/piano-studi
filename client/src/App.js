@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import { ExamList } from './ExamComponents';
+import { HomePage } from './HomePageComponents';
 import { MyNavbar } from './NavbarComponents';
 import { LoginForm } from './LoginComponents';
 import { useEffect, useState } from 'react';
@@ -88,7 +88,7 @@ function App2() {
       <br />
       <Container>
         <Routes>
-          <Route path='/' element={<ExamList exams={exams}></ExamList>} />
+          <Route path='/' element={<HomePage exams={exams} loggedIn={loggedIn}></HomePage>} />
           <Route path='/login' element={<LoginForm login={doLogIn}/>} />
           <Route path='/edit' element={<CreatePlan exams={exams} />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>

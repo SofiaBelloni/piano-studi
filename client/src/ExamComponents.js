@@ -12,7 +12,7 @@ function ExamTable(props) {
 
   return (
     <>
-      <h1>Esami</h1>
+      <h1>Offerta formativa</h1>
       <Table>
         <thead>
           <tr>
