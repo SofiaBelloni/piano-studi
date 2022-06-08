@@ -19,7 +19,7 @@ exports.getUserById = (id) => {
           resolve({error: 'User not found.'});
         else {
           // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
-          const user = {id: row.id, username: row.email, name: row.name}
+          const user = {id: row.id, username: row.email}
           resolve(user);
         }
     });
@@ -37,7 +37,7 @@ exports.getUser = (email, password) => {
           const salt = row.salt;
           crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
             if (err) reject(err);
-            const passwordHex = Buffer.from(row.password, 'hex');
+            const passwordHex = Buffer.from(row.hash, 'hex');
 
             if(!crypto.timingSafeEqual(passwordHex, hashedPassword))
               resolve(false);

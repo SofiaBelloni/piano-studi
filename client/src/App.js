@@ -28,36 +28,69 @@ function App() {
 function App2() {
 
   const [exams, setExams] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+  const [message, setMessage] = useState('');
 
+  const navigate = useNavigate();
+
+
+  function handleError(err) {
+    console.log(err);
+  }
+
+  //to load courses at the beginning
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const user = await API.getUserInfo();
+        setLoggedIn(true);
+        setUser(user);
+      } catch (err) {
+        handleError(err);
+      }
+    };
+    checkAuth();
     // fetch  /api/courses
     API.getAllCourses()
       .then((exams) => setExams(exams))
-      .catch( err => console.log(err))
+      .catch(err => console.log(err))
   }, [])
 
 
-  function doLogOut(){
-    setLoggedIn(false);
-    /*await API.logOut();
+  const doLogIn = (credentials) => {
+    API.logIn(credentials)
+      .then(user => {
+        setLoggedIn(true);
+        setUser(user);
+        setMessage('');
+        navigate('/');
+      })
+      .catch(err => {
+        setMessage(err);
+      }
+      )
+      
+  }
+
+  const doLogOut = async () => {
+    await API.logOut();
     setLoggedIn(false);
     setUser({});
-    setCourses([]);
-    setExams([]);*/
   }
+
+
 
 
   return (
     <>
-      <MyNavbar user={user} loggedIn={loggedIn} logout={doLogOut}/>
+      <MyNavbar user={user} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
         <Routes>
           <Route path='/' element={<ExamList exams={exams}></ExamList>} />
-          <Route path='/login' element={<LoginForm />} />
-          <Route path='/edit' element={<CreatePlan exams={exams}/>} />
+          <Route path='/login' element={<LoginForm login={doLogIn}/>} />
+          <Route path='/edit' element={<CreatePlan exams={exams} />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>
