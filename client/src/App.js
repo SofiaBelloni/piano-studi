@@ -65,12 +65,12 @@ function App2() {
         setUser(user);
         setMessage('');
         navigate('/');
+        console.log(user);
       })
       .catch(err => {
         setMessage(err);
       }
-      )
-      
+      )   
   }
 
   const doLogOut = async () => {
@@ -79,18 +79,15 @@ function App2() {
     setUser({});
   }
 
-
-
-
   return (
     <>
       <MyNavbar user={user} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
         <Routes>
-          <Route path='/' element={<HomePage exams={exams} loggedIn={loggedIn}></HomePage>} />
+          <Route path='/' element={<HomePage exams={exams} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={<LoginForm login={doLogIn}/>} />
-          <Route path='/edit' element={<CreatePlan exams={exams} />} />
+          <Route path='/edit'  element={ <CreatePlan exams={exams} /> } />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>
