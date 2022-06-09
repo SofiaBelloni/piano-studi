@@ -2,12 +2,24 @@ const APIURL = new URL('http://localhost:3001/api/');
 
 async function getAllCourses() {
   // call: GET /api/courses
-  const response = await fetch(new URL('courses', APIURL), { credentials: 'include' });
+  const response = await fetch(new URL('courses', APIURL));
   const coursesJson = await response.json();
   if (response.ok) {
     return coursesJson.map((course) => ({ code: course.code, name: course.name, cfu: course.cfu, student: course.student, maxStudent: course.maxStudent, prerequisite: course.prerequisite}));
   } else {
     throw coursesJson;  // an object with the error coming from the server
+  }
+}
+
+async function getStudyPlan() {
+  // call: GET /api/studyplan
+  const response = await fetch(new URL('studyplan', APIURL), {credentials: 'include'});
+  const studyplanJson = await response.json();
+  if (response.ok) {
+    console.log(studyplanJson);
+    return studyplanJson.map((course) => ({ code: course.code, name: course.name, cfu: course.cfu, student: course.student, maxStudent: course.maxStudent, prerequisite: course.prerequisite}));
+  } else {
+    throw studyplanJson;  // an object with the error coming from the server
   }
 }
 
@@ -46,6 +58,6 @@ async function getUserInfo() {
 
 
 
-const API = { getAllCourses, logIn, logOut, getUserInfo };
+const API = { getAllCourses, getStudyPlan, logIn, logOut, getUserInfo };
 
 export default API;

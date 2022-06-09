@@ -5,21 +5,19 @@ import { ExamList } from './ExamComponents';
 import { MdOutlineAdd, MdDeleteForever} from "react-icons/md";
 
 function HomePage(props) {
-    const addedExams = [];
-    props.user.type=1;
     return (
         <>
             {props.loggedIn ?
-                props.user.type ? <PlanTable exams={addedExams}/> : false
+                props.user.enrollment ? <PlanTable exams={props.studyPlan}/> : false
                 : false}
-            {props.loggedIn ? props.user.type ? <DeletePlan/> : <AddPlan/> : false}
+            {props.loggedIn ? props.user.enrollment ? <DeletePlan/> : <AddPlan/> : false}
             
             <ExamList exams={props.exams} />
         </>
     );
 }
 
-function AddPlan(props) {
+function AddPlan() {
     const navigate = useNavigate();
 
     return (

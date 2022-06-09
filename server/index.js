@@ -125,6 +125,22 @@ app.get('/api/courses', (req, res) => {
     });
 });
 
+// GET /api/studyplan
+app.get('/api/studyplan', isLoggedIn, async (req, res) => {
+  try {
+    console.log(req.user);
+    const studyPlan = await dao.listStudyPlan(req.user.id);
+    console.log(studyPlan);
+    //res.json(exams);
+    setTimeout( ()=> res.json(studyPlan), 1000);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({error: `Database error while retrieving study plan`}).end();
+  }
+});
+
+
+
 // activate the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

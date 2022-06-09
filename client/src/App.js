@@ -58,6 +58,12 @@ function App2() {
       .catch(err => console.log(err))
   }, [])
 
+  useEffect(() => {
+    if (loggedIn)
+      API.getStudyPlan()
+        .then((courses) => { setStudyPlan(courses); })
+        .catch(err => handleError(err))
+  }, [loggedIn])
 
   const doLogIn = (credentials) => {
     API.logIn(credentials)
@@ -71,7 +77,7 @@ function App2() {
       .catch(err => {
         setMessage(err);
       }
-      )   
+      )
   }
 
   const doLogOut = async () => {
@@ -86,9 +92,9 @@ function App2() {
       <br />
       <Container>
         <Routes>
-          <Route path='/' element={<HomePage exams={exams} loggedIn={loggedIn} user={user}></HomePage>} />
-          <Route path='/login' element={<LoginForm login={doLogIn}/>} />
-          <Route path='/edit'  element={ <CreatePlan exams={exams} /> } />
+          <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
+          <Route path='/login' element={<LoginForm login={doLogIn} />} />
+          <Route path='/edit' element={<CreatePlan exams={exams} />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>
