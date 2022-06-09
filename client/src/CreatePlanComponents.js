@@ -8,6 +8,7 @@ import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 function CreatePlan(props) {
     const [addedExams, setAddedExams] = useState([]);
     const [cfu, setCfu] = useState(0);
+    const [enrollment, setEnrollment] = useState("fullTime");
 
     function handleAdd(examId) {
         const newExam = props.exams.find(e => e.code === examId);
@@ -19,14 +20,26 @@ function CreatePlan(props) {
         setCfu(old => old - props.exams.find(e => e.code === examId).cfu);
     }
 
+    const isAddable = (examId) => {
+        const selectedExam = props.exams.find(e => e.code === examId);
+        if (cfu > 80) return false;
+        if (addedExams.find(e => e.code === examId))
+            return false;
+        if (selectedExam.prerequisite !== null){
+            if (!addedExams.find(e => e.code === selectedExam.prerequisite))
+                return false;
+        }
+        return true;
+    }
+
     return (
         <>
             <BackButton />
-            <PlanType></PlanType>
+            <PlanType setEnrollment={setEnrollment}></PlanType>
             <TotCFU cfu={cfu} />
             <br />
             {addedExams.length > 0 ? <PlanTable exams={addedExams} handleDelete={handleDelete} /> : false}
-            <ExamTable exams={props.exams} handleAdd={handleAdd}></ExamTable>
+            <ExamTable exams={props.exams} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
         </>
     );
 }
@@ -34,10 +47,10 @@ function CreatePlan(props) {
 function TotCFU(props) {
     return (
         <Row>
-            <Col md-2>
+            <Col>
                 <Form.Label>Crediti selezionati:</Form.Label>
             </Col>
-            <Col md-2>
+            <Col>
                 <Form.Control value={props.cfu} disabled />
             </Col>
         </Row>
@@ -49,9 +62,9 @@ function PlanType(props) {
         <>
             <Form.Group className="mb-3">
                 <Form.Label>Tipo di iscrizione:</Form.Label>
-                <Form.Select aria-label="Tipo di iscrizione"> Tipo di iscrizione
-                    <option value="1">Full Time</option>
-                    <option value="2">Part Time</option>
+                <Form.Select aria-label="Tipo di iscrizione" onChange={(event)=> props.setEnrollment(event.target.value)}> Tipo di iscrizione
+                    <option value="fullTime">Full Time</option>
+                    <option value="partTime">Part Time</option>
                 </Form.Select>
             </Form.Group>
         </>
@@ -75,7 +88,7 @@ function ExamTable(props) {
                 </thead>
                 <tbody>
                     {
-                        props.exams.map((ex) => <ExamRow handleAdd={props.handleAdd} exam={ex} />)
+                        props.exams.map((ex) => <ExamRow handleAdd={props.handleAdd} exam={ex} key={ex.code} addable={props.addable} />)
                     }
                 </tbody>
             </Table>
@@ -92,26 +105,26 @@ function ExamRow(props) {
 
     return (
         <>
-            <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} handleAdd={props.handleAdd} /></tr>
-            {expand ? <ExamInfo exam={props.exam}/> : false}
+            <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} addable={props.addable} handleAdd={props.handleAdd} /></tr>
+            {expand ? <ExamInfo exam={props.exam} /> : false}
         </>
     );
 }
 
 function ExamInfo(props) {
     return (
-      <>
-        <tr>
-          <th>Propedeutici</th>
-          <td>{props.exam.prerequisite ? props.exam.prerequisite : "/"}</td>
-        </tr>
-        <tr>
-          <th>Incompatibili</th>
-          <td>ciao</td>
-        </tr>
-      </>
+        <>
+            <tr>
+                <th>Propedeutici</th>
+                <td>{props.exam.prerequisite ? props.exam.prerequisite : "/"}</td>
+            </tr>
+            <tr>
+                <th>Incompatibili</th>
+                <td>ciao</td>
+            </tr>
+        </>
     );
-  }
+}
 
 function ExamData(props) {
     return (
@@ -124,7 +137,7 @@ function ExamData(props) {
             <td><Button onClick={() => { props.moreInfo(props.expand) }}>
                 {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
             <td>
-                <Button onClick={() => props.handleAdd(props.exam.code)} ><MdOutlineAdd /></Button>
+                <Button onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
             </td>
         </>
     );
@@ -145,7 +158,7 @@ function PlanTable(props) {
                 </thead>
                 <tbody>
                     {
-                        props.exams.map((ex) => <PlanRow exam={ex} handleDelete={props.handleDelete} />)
+                        props.exams.map((ex) => <PlanRow exam={ex} key={ex.code+'i'} handleDelete={props.handleDelete} />)
                     }
                 </tbody>
             </Table>

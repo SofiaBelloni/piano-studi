@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import { HomePage } from './HomePageComponents';
@@ -28,6 +28,7 @@ function App() {
 function App2() {
 
   const [exams, setExams] = useState([]);
+  const [studyPlan, setStudyPlan] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [message, setMessage] = useState('');
