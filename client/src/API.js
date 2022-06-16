@@ -22,7 +22,46 @@ async function getStudyPlan() {
     throw studyplanJson;  // an object with the error coming from the server
   }
 }
+function deleteStudyPlan() {
+  // DELETE /api/studyplan
+  return new Promise((resolve, reject) => {
+    fetch(new URL('studyplan', APIURL), {
+      method: 'DELETE',
+      credentials: 'include'
+    }).then((response) => {
+      if (response.ok) {
+        resolve(null);
+      } else {
+        // analyze the cause of error
+        response.json()
+          .then((message) => { reject(message); }) // error message in the response body
+          .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+      }
+    }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+  });
+}
 
+function setEnrollmentNull() {
+  // call: PUT api/enrollment
+  return new Promise((resolve, reject) => {
+    fetch(new URL('enrollment', APIURL), {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      if (response.ok) {
+        resolve(null);
+      } else {
+        // analyze the cause of error
+        response.json()
+          .then((obj) => { reject(obj); }) // error message in the response body
+          .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+      }
+    }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+  });
+}
 
 async function logIn(credentials) {
   let response = await fetch(new URL('sessions', APIURL), {
@@ -58,6 +97,6 @@ async function getUserInfo() {
 
 
 
-const API = { getAllCourses, getStudyPlan, logIn, logOut, getUserInfo };
+const API = { getAllCourses, getStudyPlan, deleteStudyPlan, setEnrollmentNull, logIn, logOut, getUserInfo };
 
 export default API;

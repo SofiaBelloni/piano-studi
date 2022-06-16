@@ -11,7 +11,7 @@ function HomePage(props) {
             {props.loggedIn ?
                 props.user.enrollment ? <PlanTable exams={props.studyPlan} edit={false}/> : false
                 : <p className='dologin text-info'> Effettua il login per visualizzare il tuo piano di studio </p>}
-            {props.loggedIn ? props.user.enrollment ? <PlanManagement /> : <AddPlan /> : false}
+            {props.loggedIn ? props.user.enrollment ? <PlanManagement delete={props.delete} /> : <AddPlan /> : false}
 
             <ExamTable exams={props.exams} edit={false}/>
         </>
@@ -39,7 +39,7 @@ function PlanManagement(props) {
                 <Button variant="primary" onClick={() => navigate(`/edit`)}><MdEditNote /> Modifica piano di studio</Button>
             </Col>
             <Col>
-                <Button variant="danger"><MdDeleteForever /> Elimina piano di studio</Button>
+                <Button variant="danger" onClick={() => props.delete()}><MdDeleteForever /> Elimina piano di studio</Button>
             </Col>
         </Row>
     );

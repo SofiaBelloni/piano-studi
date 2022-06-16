@@ -128,9 +128,7 @@ app.get('/api/courses', (req, res) => {
 // GET /api/studyplan
 app.get('/api/studyplan', isLoggedIn, async (req, res) => {
   try {
-    console.log(req.user);
     const studyPlan = await dao.listStudyPlan(req.user.id);
-    console.log(studyPlan);
     //res.json(exams);
     setTimeout( ()=> res.json(studyPlan), 1000);
   } catch(err) {
@@ -139,6 +137,31 @@ app.get('/api/studyplan', isLoggedIn, async (req, res) => {
   }
 });
 
+//DELETE /api/studyplan
+app.delete('/api/studyplan', isLoggedIn, async (req, res) => {
+  try {
+      await dao.deleteStudyPlan(req.user.id);
+      res.status(204).end();
+  } catch (err) {
+      res.status(503).json({ error: `Database error during the deletion of studyplan` });
+  }
+});
+
+//Remove enrollment when the studyplan is deleted 
+///api/enrollment
+app.put('/api/enrollment', isLoggedIn, [], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+      await dao.setEnrollmentNull(req.user.id);
+      res.status(200).end();
+  }
+  catch (err) {
+      res.status(503).json({ error: `Database error during the update of enrollment` });
+  }
+});
 
 
 // activate the server

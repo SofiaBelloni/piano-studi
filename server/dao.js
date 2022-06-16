@@ -21,7 +21,7 @@ exports.listCourses = () => {
     })
 }
 
-// get study plan of a studente
+// get study plan of a student
 exports.listStudyPlan = (userId) => {
     return new Promise((resolve, reject) => {
       const sql = 'SELECT exams.code, name, CFU, student, maxStudent, prerequisite FROM exams JOIN studyPlans ON exams.code=studyPlans.code WHERE id = ?';
@@ -38,3 +38,27 @@ exports.listStudyPlan = (userId) => {
     });
   };
   
+//delete studyPlan
+exports.deleteStudyPlan = (user) => {
+  return new Promise((resolve, reject) => {
+      const sql = "DELETE FROM studyPlans WHERE id=?";
+      db.run(sql, [user], function (err) {
+          if (err) reject(err);
+          else resolve(null);
+      })
+  });
+}
+
+//set enrollment to NULL)
+exports.setEnrollmentNull = (user) => {
+    
+  return new Promise((resolve, reject) => {
+      const sql = "UPDATE users SET  enrollment=NULL WHERE id=?";
+      db.run(sql, [user], function (err) {
+          if (err){ reject(err);
+              return;
+          }
+           resolve(this.id);
+      })
+  });
+}
