@@ -1,6 +1,6 @@
 import { Container, Navbar, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaBook } from "react-icons/fa";
+import { FaUniversity } from "react-icons/fa";
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 
 function MyNavbar(props) {
@@ -8,11 +8,11 @@ function MyNavbar(props) {
   return (
     <Navbar variant="dark" bg="primary">
       <Container fluid>
-        <Navbar.Brand><Button onClick={() => navigate(`/`)}><FaBook width="30" height="30" /></Button></Navbar.Brand>
-        <Navbar.Brand>
-          {props.loggedIn ? "Benvenuta Sofia"
+        <Navbar.Brand><Button className='btn-lg' onClick={() => navigate(`/`)}><FaUniversity size='1.1em'/></Button>
+        {props.loggedIn ? "Bentornato, "+props.name
             : "Piano degli studi"}
         </Navbar.Brand>
+        
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Brand>
           {props.loggedIn ? <Button onClick={props.logout}>Logout</Button>

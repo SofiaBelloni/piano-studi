@@ -1,12 +1,6 @@
 import { Table, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { MdOutlineExpandMore, MdExpandLess } from "react-icons/md";
-
-function ExamList(props) {
-  return (
-    <ExamTable exams={props.exams}></ExamTable>
-  );
-}
+import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd} from "react-icons/md";
 
 function ExamTable(props) {
 
@@ -25,7 +19,7 @@ function ExamTable(props) {
         </thead>
         <tbody>
           {
-            props.exams.map((ex) => <ExamRow exam={ex} key={ex.code} />)
+            props.exams.map((ex) => <ExamRow exam={ex} key={ex.code} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd}/>)
           }
         </tbody>
       </Table>
@@ -43,8 +37,8 @@ function ExamRow(props) {
 
   return (
     <>
-      <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} /></tr>
-      {expand ? <ExamInfo exam={props.exam}/> : false}
+      <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd}/></tr>
+      {expand ? <ExamInfo exam={props.exam} /> : false}
     </>
   );
 }
@@ -74,8 +68,15 @@ function ExamData(props) {
       <td>{props.exam.maxStudent}</td>
       <td><Button onClick={() => { props.moreInfo(props.expand) }}>
         {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
+      {props.edit ?
+        <td>
+          <Button onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
+        </td>
+        : false
+
+      }
     </>
   );
 }
 
-export { ExamList };
+export { ExamTable };

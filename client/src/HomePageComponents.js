@@ -1,18 +1,19 @@
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 import { Button, Row, Col } from 'react-bootstrap';
 import { PlanTable } from './StudyPlanComponents';
-import { ExamList } from './ExamComponents';
-import { MdOutlineAdd, MdDeleteForever} from "react-icons/md";
+import { ExamTable } from './ExamComponents';
+import { MdOutlineAdd, MdDeleteForever, MdEditNote } from "react-icons/md";
+import './ComponentsStyle.css';
 
 function HomePage(props) {
     return (
         <>
             {props.loggedIn ?
-                props.user.enrollment ? <PlanTable exams={props.studyPlan}/> : false
-                : false}
-            {props.loggedIn ? props.user.enrollment ? <DeletePlan/> : <AddPlan/> : false}
-            
-            <ExamList exams={props.exams} />
+                props.user.enrollment ? <PlanTable exams={props.studyPlan} edit={false}/> : false
+                : <p className='dologin text-info'> Effettua il login per visualizzare il tuo piano di studio </p>}
+            {props.loggedIn ? props.user.enrollment ? <PlanManagement /> : <AddPlan /> : false}
+
+            <ExamTable exams={props.exams} edit={false}/>
         </>
     );
 }
@@ -29,9 +30,14 @@ function AddPlan() {
     );
 }
 
-function DeletePlan(props) {
+function PlanManagement(props) {
+    const navigate = useNavigate();
+    
     return (
         <Row>
+            <Col>
+                <Button variant="primary" onClick={() => navigate(`/edit`)}><MdEditNote /> Modifica piano di studio</Button>
+            </Col>
             <Col>
                 <Button variant="danger"><MdDeleteForever /> Elimina piano di studio</Button>
             </Col>

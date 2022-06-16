@@ -3,12 +3,20 @@ import { useState } from 'react';
 import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd, MdDeleteForever } from "react-icons/md";
 import Form from 'react-bootstrap/Form'
 import { BackButton } from './Utility';
+import { PlanTable } from './StudyPlanComponents';
+import { ExamTable } from './ExamComponents'
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 
 function CreatePlan(props) {
-    const [addedExams, setAddedExams] = useState([]);
-    const [cfu, setCfu] = useState(0);
-    const [enrollment, setEnrollment] = useState("fullTime");
+    const [addedExams, setAddedExams] = useState(props.studyPlan ? props.studyPlan : []);
+    const [cfu, setCfu] = useState(props.studyPlan ? computeCFU() : 0);
+    const [enrollment, setEnrollment] = useState(props.user.enrollment ? props.user.enrollment : "fullTime");
+
+    function computeCFU() {
+        let cfu = 0;
+        addedExams.forEach(e => cfu += e.cfu);
+        return cfu;
+    }
 
     function handleAdd(examId) {
         const newExam = props.exams.find(e => e.code === examId);
@@ -25,21 +33,41 @@ function CreatePlan(props) {
         if (cfu > 80) return false;
         if (addedExams.find(e => e.code === examId))
             return false;
-        if (selectedExam.prerequisite !== null){
+        if (selectedExam.prerequisite !== null) {
             if (!addedExams.find(e => e.code === selectedExam.prerequisite))
                 return false;
         }
         return true;
     }
 
+    //check if the studyPlan respects cfu constraints
+    const savePlan = () => {
+        switch (enrollment) {
+            case "fullTime":
+                if (cfu >= 60 && cfu <= 80)
+                    return true;
+            case "partTime":
+                if (cfu >= 20 && cfu <= 40)
+                    return true;
+            default:
+                return false;
+        }
+    }
+
     return (
         <>
             <BackButton />
-            <PlanType setEnrollment={setEnrollment}></PlanType>
+            <PlanType setEnrollment={setEnrollment} enrollment={enrollment} user={props.user}></PlanType>
             <TotCFU cfu={cfu} />
             <br />
-            {addedExams.length > 0 ? <PlanTable exams={addedExams} handleDelete={handleDelete} /> : false}
-            <ExamTable exams={props.exams} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
+            {addedExams.length > 0 ?
+                <>
+                    <PlanTable exams={addedExams} handleDelete={handleDelete} edit={true} />
+                    <Save save={savePlan} />
+                </>
+                : false}
+            <br />
+            <ExamTable exams={props.exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
         </>
     );
 }
@@ -62,7 +90,7 @@ function PlanType(props) {
         <>
             <Form.Group className="mb-3">
                 <Form.Label>Tipo di iscrizione:</Form.Label>
-                <Form.Select aria-label="Tipo di iscrizione" onChange={(event)=> props.setEnrollment(event.target.value)}> Tipo di iscrizione
+                <Form.Select aria-label="Tipo di iscrizione" value={props.enrollment} onChange={(event) => props.setEnrollment(event.target.value)} disabled={props.user.enrollment ? true : false}> Tipo di iscrizione
                     <option value="fullTime">Full Time</option>
                     <option value="partTime">Part Time</option>
                 </Form.Select>
@@ -71,127 +99,18 @@ function PlanType(props) {
     );
 }
 
-function ExamTable(props) {
-
-    return (
-        <>
-            <h1>Esami</h1>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Codice</th>
-                        <th>Nome</th>
-                        <th>CFU</th>
-                        <th>Studenti Iscritti</th>
-                        <th>Massimo Studenti</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        props.exams.map((ex) => <ExamRow handleAdd={props.handleAdd} exam={ex} key={ex.code} addable={props.addable} />)
-                    }
-                </tbody>
-            </Table>
-        </>
-    );
-}
-
-function ExamRow(props) {
-    const [expand, setExpand] = useState(false);
-
-    function moreInfo(old) {
-        setExpand(!old);
-    }
-
-    return (
-        <>
-            <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} addable={props.addable} handleAdd={props.handleAdd} /></tr>
-            {expand ? <ExamInfo exam={props.exam} /> : false}
-        </>
-    );
-}
-
-function ExamInfo(props) {
-    return (
-        <>
-            <tr>
-                <th>Propedeutici</th>
-                <td>{props.exam.prerequisite ? props.exam.prerequisite : "/"}</td>
-            </tr>
-            <tr>
-                <th>Incompatibili</th>
-                <td>ciao</td>
-            </tr>
-        </>
-    );
-}
-
-function ExamData(props) {
-    return (
-        <>
-            <td>{props.exam.code}</td>
-            <td>{props.exam.name}</td>
-            <td>{props.exam.cfu}</td>
-            <td>{props.exam.student}</td>
-            <td>{props.exam.maxStudent}</td>
-            <td><Button onClick={() => { props.moreInfo(props.expand) }}>
-                {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
-            <td>
-                <Button onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
-            </td>
-        </>
-    );
-}
-
-function PlanTable(props) {
+function Save(props) {
     const navigate = useNavigate();
     return (
-        <>
-            <h1>Piano degli studi</h1>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Codice</th>
-                        <th>Nome</th>
-                        <th>CFU</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        props.exams.map((ex) => <PlanRow exam={ex} key={ex.code+'i'} handleDelete={props.handleDelete} />)
-                    }
-                </tbody>
-            </Table>
-            <Row>
-                <Col md>
-                    <Button className='mx-3' variant="secondary" onClick={() => navigate('/')}>Salva</Button>
-                </Col>
-                <Col md>
-                    <Button className='mx-3' variant="secondary" onClick={() => navigate('/')}>Cancella</Button>
-                </Col>
-            </Row>
-        </>
+        <Row>
+            <Col md>
+                <Button className='mx-3' variant="primary" onClick={() => navigate('/')} disabled={!props.save()}>Salva</Button>
+            </Col>
+            <Col md>
+                <Button className='mx-3' variant="danger" onClick={() => navigate('/')}>Cancella</Button>
+            </Col>
+        </Row>
     );
 }
-
-function PlanRow(props) {
-    return (
-        <tr><PlanData exam={props.exam} handleDelete={props.handleDelete} /></tr>
-    );
-}
-
-function PlanData(props) {
-    return (
-        <>
-            <td>{props.exam.code}</td>
-            <td>{props.exam.name}</td>
-            <td>{props.exam.cfu}</td>
-            <td>
-                <Button onClick={() => props.handleDelete(props.exam.code)}><MdDeleteForever /></Button>
-            </td>
-        </>
-    );
-}
-
 
 export { CreatePlan };

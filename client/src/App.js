@@ -84,17 +84,18 @@ function App2() {
     await API.logOut();
     setLoggedIn(false);
     setUser({});
+    navigate('/');
   }
 
   return (
     <>
-      <MyNavbar user={user} loggedIn={loggedIn} logout={doLogOut} />
+      <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={<LoginForm login={doLogIn} />} />
-          <Route path='/edit' element={<CreatePlan exams={exams} />} />
+          <Route path='/edit' element={<CreatePlan exams={exams} studyPlan={studyPlan} user={user}/>} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>
