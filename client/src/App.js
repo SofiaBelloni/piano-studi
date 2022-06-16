@@ -90,7 +90,10 @@ function App2() {
   const deleteStudyPlan = async() =>{
     await API.deleteStudyPlan()
     .then(API.setEnrollmentNull)
-    .then(navigate('/')); //TODO add success messagge, udpdate student
+    .then(navigate('/'))
+    .catch(err => {
+      setMessage(err);
+    }) //TODO: add success messagge, udpdate student
     setStudyPlan([]);
   }
 

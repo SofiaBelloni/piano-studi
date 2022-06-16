@@ -5,7 +5,7 @@ async function getAllCourses() {
   const response = await fetch(new URL('courses', APIURL));
   const coursesJson = await response.json();
   if (response.ok) {
-    return coursesJson.map((course) => ({ code: course.code, name: course.name, cfu: course.cfu, student: course.student, maxStudent: course.maxStudent, prerequisite: course.prerequisite}));
+    return coursesJson.map((course) => ({ code: course.code, name: course.name, cfu: course.cfu, student: course.student, maxStudent: course.maxStudent, prerequisite: course.prerequisite, incompatibility: course.incompatibility}));
   } else {
     throw coursesJson;  // an object with the error coming from the server
   }

@@ -1,6 +1,6 @@
 import { Table, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd} from "react-icons/md";
+import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd } from "react-icons/md";
 
 function ExamTable(props) {
 
@@ -19,7 +19,7 @@ function ExamTable(props) {
         </thead>
         <tbody>
           {
-            props.exams.map((ex) => <ExamRow exam={ex} key={ex.code} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd}/>)
+            props.exams.map((ex) => <ExamRow exam={ex} key={ex.code} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd} />)
           }
         </tbody>
       </Table>
@@ -37,7 +37,7 @@ function ExamRow(props) {
 
   return (
     <>
-      <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd}/></tr>
+      <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd} /></tr>
       {expand ? <ExamInfo exam={props.exam} /> : false}
     </>
   );
@@ -52,7 +52,7 @@ function ExamInfo(props) {
       </tr>
       <tr>
         <th>Incompatibili</th>
-        <td>ciao</td>
+        <td>{props.exam.incompatibility ? props.exam.incompatibility.toString() : "/"}</td>
       </tr>
     </>
   );
