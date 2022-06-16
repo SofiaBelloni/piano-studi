@@ -1,6 +1,5 @@
-import { Table, Button, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
-import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd, MdDeleteForever } from "react-icons/md";
 import Form from 'react-bootstrap/Form'
 import { BackButton } from './Utility';
 import { PlanTable } from './StudyPlanComponents';
