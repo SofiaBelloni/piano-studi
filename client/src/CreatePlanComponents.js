@@ -18,24 +18,41 @@ function CreatePlan(props) {
     }
 
     function handleAdd(examId) {
-        const newExam = props.exams.find(e => e.code === examId);
+        let newExam = props.exams.find(e => e.code === examId);
         setAddedExams(oldFilms => [...oldFilms, newExam]);
         setCfu(old => old + newExam.cfu);
+        //FIXME: change number of student
+        newExam.student += 1;
     }
+
     function handleDelete(examId) {
         setAddedExams(addedExams.filter(e => e.code !== examId));
         setCfu(old => old - props.exams.find(e => e.code === examId).cfu);
+        props.exams.find(e => e.code === examId).student -= 1;
     }
 
     const isAddable = (examId) => {
         const selectedExam = props.exams.find(e => e.code === examId);
-        if (cfu > 80) return false;
+        //if (cfu > 80) return false;
         if (addedExams.find(e => e.code === examId))
             return false;
         if (selectedExam.prerequisite !== null) {
             if (!addedExams.find(e => e.code === selectedExam.prerequisite))
                 return false;
         }
+        if (selectedExam.incompatibility[0]!== null) {
+            let value = true;
+            selectedExam.incompatibility.forEach(inc => {
+                console.log(selectedExam.name + " " + inc);
+                if (inc !== null && addedExams.find(e => e.code === inc)){
+                    value = false;
+                }
+            });
+            if (!value)
+                return false;
+        }
+        if (selectedExam.maxStudent !== null && selectedExam.student >= selectedExam.maxStudent)
+            return false;
         return true;
     }
 
