@@ -81,7 +81,6 @@ exports.updateEnrollment = (enrollment) => {
 exports.addStudyPlan = (studyPlan) => {
   return new Promise((resolve, reject) => {
     for (const exam of studyPlan.courses) {
-      console.log("exam: "+exam);
       const sql = "INSERT INTO studyPlans(id, code) values (?,?)";
       db.run(sql, [studyPlan.id, exam], function (err) {
         if (err) {
@@ -90,5 +89,31 @@ exports.addStudyPlan = (studyPlan) => {
         } else resolve(this.id);
       })
     }
+  });
+}
+
+//increment student's number
+exports.incrementStudentsNumber = (id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE exams SET student=student+1 WHERE code IN (SELECT code FROM studyPlans WHERE id=?)";
+      db.run(sql, [id], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        } else resolve(this.id);
+      })
+  });
+}
+
+//decrement student's number
+exports.decrementStudentsNumber = (id) => {
+  return new Promise((resolve, reject) => {
+      const sql = "UPDATE exams SET student=student-1 WHERE code IN (SELECT code FROM studyPlans WHERE id=?)";
+      db.run(sql, [id], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        } else resolve(this.id);
+      })
   });
 }

@@ -85,12 +85,13 @@ function App2() {
   }
 
   const deleteStudyPlan = async () => {
-    API.deleteStudyPlan()
+    API.decrementStudentsNumber()
+      .then(() => API.deleteStudyPlan())
       .then(() => API.setEnrollmentNull())
       .then(navigate('/'))
       .catch(err => {
         setMessage(err);
-      }) //TODO: add success messagge, udpdate student number
+      }) //TODO: add success messagge
     setStudyPlan([]);
     user.enrollment = null;
     setDirty(true);
@@ -98,22 +99,18 @@ function App2() {
 
   const addStudyPlan = async (enrollment, studyPlan) => {
     //delete old study plan
-    if (user.enrollment !== null) {
-      API.deleteStudyPlan()
-        .catch(err => {
-          setMessage(err);
-        })
-    }
-    //add new study plan
-    await API.addStudyPlan(studyPlan)
+    API.decrementStudentsNumber()
+      .then(() => API.deleteStudyPlan())
+      //add new study plan
+      .then(() => API.addStudyPlan(studyPlan))
       //update student's enrollment
       .then(() => API.updateEnrollment(enrollment))
+      .then(() => API.incrementStudentsNumber())
       .then(navigate('/'))
       .catch(err => {
         setMessage(err);
       })
     //TODO: 
-    //update numero studenti
     //success message
     setDirty(true);
   }
@@ -127,7 +124,7 @@ function App2() {
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={<LoginForm login={doLogIn} />} />
           //FIXME: redirect se non sei loggato
-          <Route path='/edit' element={<CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan}/>} />
+          <Route path='/edit' element={<CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>

@@ -122,7 +122,6 @@ app.get('/api/courses', (req, res) => {
   dao.listCourses()
     .then(courses => res.json(courses))
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ errors: `Database error while retrieving courses` }).end()
     });
 });
@@ -134,7 +133,6 @@ app.get('/api/studyplan', isLoggedIn, async (req, res) => {
     //res.json(exams);
     setTimeout(() => res.json(studyPlan), 1000);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: `Database error while retrieving study plan` }).end();
   }
 });
@@ -168,6 +166,39 @@ app.put('/api/enrollment', isLoggedIn, [], async (req, res) => {
   }
 });
 
+//UPDATE increment student's number api/increment/students
+app.put('/api/increment/students', isLoggedIn, [
+  //TODO: check
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    await dao.incrementStudentsNumber(req.user.id);
+    res.status(200).end();
+  }
+  catch (err) {
+    res.status(503).json({ error: `Database error during the increment of students number` });
+  }
+});
+
+//UPDATE decrement student's number api/decrement/students
+app.put('/api/decrement/students', isLoggedIn, [
+  //TODO: check
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    await dao.decrementStudentsNumber(req.user.id);
+    res.status(200).end();
+  }
+  catch (err) {
+    res.status(503).json({ error: `Database error during the decrement of students number` });
+  }
+});
 
 //ADD /api/studyplan
 app.post('/api/studyplan', isLoggedIn, [
@@ -182,8 +213,6 @@ app.post('/api/studyplan', isLoggedIn, [
     id: req.user.id,
     courses: req.body.courses,
   };
-
-  console.log(studyPlan);
 
   try {
     await dao.addStudyPlan(studyPlan);
