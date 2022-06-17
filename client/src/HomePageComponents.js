@@ -6,6 +6,7 @@ import { MdOutlineAdd, MdDeleteForever, MdEditNote } from "react-icons/md";
 import './ComponentsStyle.css';
 
 function HomePage(props) {
+    
     return (
         <>
             {props.loggedIn ?
@@ -32,7 +33,7 @@ function AddPlan() {
 
 function PlanManagement(props) {
     const navigate = useNavigate();
-    
+
     return (
         <Row>
             <Col className='text-center'>

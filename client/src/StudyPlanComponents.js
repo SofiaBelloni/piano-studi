@@ -1,9 +1,7 @@
 import { Table, Button } from 'react-bootstrap';
-import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 import { MdDeleteForever } from "react-icons/md";
 
 function PlanTable(props) {
-    const navigate = useNavigate();
     return (
         <>
             <h1>Piano degli studi</h1>
@@ -17,7 +15,7 @@ function PlanTable(props) {
                 </thead>
                 <tbody>
                     {
-                        props.exams.map((ex) => <PlanRow exam={ex} edit={props.edit} handleDelete={props.handleDelete} key={ex.code + 'plan'} />)
+                        props.exams.map((ex) => <PlanRow exam={ex} edit={props.edit} handleDelete={props.handleDelete} delete={props.delete} key={ex.code + 'plan'} />)
                     }
                 </tbody>
             </Table>
@@ -27,7 +25,7 @@ function PlanTable(props) {
 
 function PlanRow(props) {
     return (
-        <tr><PlanData exam={props.exam} edit={props.edit} handleDelete={props.handleDelete}/></tr>
+        <tr><PlanData exam={props.exam} edit={props.edit} handleDelete={props.handleDelete} delete={props.delete}/></tr>
     );
 }
 
@@ -39,7 +37,7 @@ function PlanData(props) {
             <td>{props.exam.cfu}</td>
             { props.edit ?
                 <td>
-                    <Button onClick={() => props.handleDelete(props.exam.code)}><MdDeleteForever /></Button>
+                    <Button onClick={() => props.handleDelete(props.exam.code)} disabled={!props.delete(props.exam.code)}><MdDeleteForever /></Button>
                 </td>
                 : false
             }

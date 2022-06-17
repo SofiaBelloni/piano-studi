@@ -43,22 +43,17 @@ function App2() {
     }
   };
 
-  //to load courses at the beginning
   useEffect(() => {
     checkAuth();
     API.getAllCourses()
-      .then((exams) => setExams(exams))
+      .then((exams) => { setExams(exams); setDirty(false); })
       .catch(err => console.log(err))
-  }, [])
-
-  useEffect(() => {
-    checkAuth();
   }, [dirty])
 
   useEffect(() => {
     if (loggedIn)
       API.getStudyPlan()
-        .then((courses) => { setStudyPlan(courses); })
+        .then((courses) => { setStudyPlan(courses); setDirty(false); })
         .catch(err => handleError(err))
   }, [loggedIn, dirty])
 
@@ -69,7 +64,6 @@ function App2() {
         setUser(user);
         setMessage('');
         navigate('/');
-        console.log(user);
       })
       .catch(err => {
         setMessage(err);
@@ -88,31 +82,43 @@ function App2() {
     API.decrementStudentsNumber()
       .then(() => API.deleteStudyPlan())
       .then(() => API.setEnrollmentNull())
-      .then(navigate('/'))
+      .then(() => {
+        navigate('/');
+        //FIXME: set success message
+        setStudyPlan([]);
+        user.enrollment = null;
+        setDirty(true);
+      })
       .catch(err => {
         setMessage(err);
-      }) //TODO: add success messagge
-    setStudyPlan([]);
-    user.enrollment = null;
-    setDirty(true);
+      }) //TODO: add messagge
   }
 
   const addStudyPlan = async (enrollment, studyPlan) => {
-    //delete old study plan
-    API.decrementStudentsNumber()
-      .then(() => API.deleteStudyPlan())
-      //add new study plan
-      .then(() => API.addStudyPlan(studyPlan))
+
+    if (user.enrollment !== null) {
+      //delete old study plan
+      await API.decrementStudentsNumber()
+        .then(() => API.deleteStudyPlan())
+    }
+    //add new study plan
+    API.addStudyPlan(studyPlan.map((e) => e.code))
       //update student's enrollment
       .then(() => API.updateEnrollment(enrollment))
+      //update number of students
       .then(() => API.incrementStudentsNumber())
-      .then(navigate('/'))
+      .then(() => {
+        navigate('/');
+        //FIXME: set success message
+        setStudyPlan(studyPlan);
+        user.enrollment = enrollment;
+        setDirty(true);
+      })
       .catch(err => {
         setMessage(err);
       })
     //TODO: 
     //success message
-    setDirty(true);
   }
 
   return (
@@ -122,9 +128,12 @@ function App2() {
       <Container>
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
-          <Route path='/login' element={<LoginForm login={doLogIn} />} />
-          //FIXME: redirect se non sei loggato
-          <Route path='/edit' element={<CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} />} />
+          <Route path='/login' element={loggedIn ?
+            <LoginForm login={doLogIn} />
+            : <Navigate to='/' />} />
+          <Route path='/edit' element={loggedIn ?
+            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} />
+            : <Navigate to='/login' />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
       </Container>

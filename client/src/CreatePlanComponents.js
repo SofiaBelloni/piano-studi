@@ -6,8 +6,12 @@ import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents'
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 
+//FIXME: gestire quande fai cancella modifiche che non venga modificato il numero di iscritti
+//FIXME: evidenzia righe non aggiungibili
+
 function CreatePlan(props) {
     const [addedExams, setAddedExams] = useState(props.studyPlan ? props.studyPlan : []);
+    const exams = props.exams;
     const [cfu, setCfu] = useState(props.studyPlan ? computeCFU() : 0);
     const [enrollment, setEnrollment] = useState(props.user.enrollment ? props.user.enrollment : "fullTime");
 
@@ -20,51 +24,72 @@ function CreatePlan(props) {
 
     //when an exam is added to the studyPlan
     function handleAdd(examId) {
-        let newExam = props.exams.find(e => e.code === examId);
+        let newExam = exams.find(e => e.code === examId);
         setAddedExams(oldFilms => [...oldFilms, newExam]);
         setCfu(old => old + newExam.cfu);
-        //FIXME: change number of student
         newExam.student += 1;
     }
 
     //when an exam is removed from the studyPlan
     function handleDelete(examId) {
         setAddedExams(addedExams.filter(e => e.code !== examId));
-        setCfu(old => old - props.exams.find(e => e.code === examId).cfu);
-        props.exams.find(e => e.code === examId).student -= 1;
-        //FIXME: gestire esami propedeutici
+        setCfu(old => old - exams.find(e => e.code === examId).cfu);
+        exams.find(e => e.code === examId).student -= 1;
     }
 
     //when the study plan is confirmed
-    function handleSave(){
-        const studyPlan = addedExams.map((e)=>e.code);
-        console.log(studyPlan);
-        props.save(enrollment, studyPlan);
+    function handleSave() {
+        props.save(enrollment, addedExams);
     }
 
     //check if is possible to add exam with id examId to the study plan
     const isAddable = (examId) => {
-        const selectedExam = props.exams.find(e => e.code === examId);
-        //if (cfu > 80) return false;
+        const selectedExam = exams.find(e => e.code === examId);
+        //check cfu
+        switch (enrollment) {
+            case "fullTime":
+                if (selectedExam.cfu + cfu >= 80)
+                    return false;
+                break;
+            case "partTime":
+                if (selectedExam.cfu + cfu >= 40)
+                    return false;
+                break;
+            default:
+        }
+        //to add an exam only once
         if (addedExams.find(e => e.code === examId))
             return false;
+        //check prerequisite
         if (selectedExam.prerequisite !== null) {
             if (!addedExams.find(e => e.code === selectedExam.prerequisite))
                 return false;
         }
-        if (selectedExam.incompatibility[0]!== null) {
+        //check incompatibility
+        if (selectedExam.incompatibility[0] !== null) {
             let value = true;
             selectedExam.incompatibility.forEach(inc => {
-                if (inc !== null && addedExams.find(e => e.code === inc)){
+                if (inc !== null && addedExams.find(e => e.code === inc)) {
                     value = false;
                 }
             });
             if (!value)
                 return false;
         }
+        //check max number of student
         if (selectedExam.maxStudent !== null && selectedExam.student >= selectedExam.maxStudent)
             return false;
         return true;
+    }
+
+    //check if is possible to remove an exam with id examId from the study plan
+    const isDeletable = (examId) => {
+        let value = true;
+        addedExams.forEach(ex => {
+            if (ex.prerequisite !== null && ex.prerequisite === examId)
+                value = false;
+        });
+        return value;
     }
 
     //check if the studyPlan respects cfu constraints
@@ -73,9 +98,11 @@ function CreatePlan(props) {
             case "fullTime":
                 if (cfu >= 60 && cfu <= 80)
                     return true;
+                break;
             case "partTime":
                 if (cfu >= 20 && cfu <= 40)
                     return true;
+                break;
             default:
                 return false;
         }
@@ -89,12 +116,12 @@ function CreatePlan(props) {
             <br />
             {addedExams.length > 0 ?
                 <>
-                    <PlanTable exams={addedExams} handleDelete={handleDelete} edit={true} />
-                    <Save save={savePlan} add={handleSave}/>
+                    <PlanTable exams={addedExams} handleDelete={handleDelete} delete={isDeletable} edit={true} />
+                    <Save save={savePlan} add={handleSave} />
                 </>
                 : false}
             <br />
-            <ExamTable exams={props.exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
+            <ExamTable exams={exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
         </>
     );
 }
