@@ -25,7 +25,7 @@ exports.listCourses = () => {
           });
           if (existing.length) {
             let existingIndex = course.indexOf(existing[0]);
-            course[existingIndex].incompatibility = [... course[existingIndex].incompatibility, item.incompatibility].flat();
+            course[existingIndex].incompatibility = [...course[existingIndex].incompatibility, item.incompatibility].flat();
           } else {
             course.push(item);
           }
@@ -63,17 +63,32 @@ exports.deleteStudyPlan = (user) => {
   });
 }
 
-//set enrollment to NULL)
-exports.setEnrollmentNull = (user) => {
-
+//update enrollment
+exports.updateEnrollment = (enrollment) => {
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE users SET  enrollment=NULL WHERE id=?";
-    db.run(sql, [user], function (err) {
+    const sql = "UPDATE users SET enrollment=? WHERE id=?";
+    db.run(sql, [enrollment.enrollment, enrollment.id], function (err) {
       if (err) {
         reject(err);
         return;
       }
       resolve(this.id);
     })
+  });
+}
+
+//add exam to the study plan
+exports.addStudyPlan = (studyPlan) => {
+  return new Promise((resolve, reject) => {
+    for (const exam of studyPlan.courses) {
+      console.log("exam: "+exam);
+      const sql = "INSERT INTO studyPlans(id, code) values (?,?)";
+      db.run(sql, [studyPlan.id, exam], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        } else resolve(this.id);
+      })
+    }
   });
 }

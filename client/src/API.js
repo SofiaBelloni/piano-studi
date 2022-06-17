@@ -49,7 +49,8 @@ function setEnrollmentNull() {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify({enrollment: 'NULL'}),
     }).then((response) => {
       if (response.ok) {
         resolve(null);
@@ -60,6 +61,51 @@ function setEnrollmentNull() {
           .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
       }
     }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+  });
+}
+
+function updateEnrollment(enrollment) {
+  // call: PUT api/enrollment
+  return new Promise((resolve, reject) => {
+    fetch(new URL('enrollment', APIURL), {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({enrollment: enrollment}),
+    }).then((response) => {
+      if (response.ok) {
+        resolve(null);
+      } else {
+        // analyze the cause of error
+        response.json()
+          .then((obj) => { reject(obj); }) // error message in the response body
+          .catch(() => { reject({ error: "Cannot parse server response." }) }); // something else
+      }
+    }).catch(() => { reject({ error: "Cannot communicate with the server." }) }); // connection errors
+  });
+}
+
+async function addStudyPlan(studyPlan) {
+  //call: POST api/studyPlan
+  return new Promise((resolve, reject) => {
+    fetch(new URL('studyplan', APIURL), {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ courses: studyPlan }),
+    }).then((response) => {
+      if (response.ok) {
+        resolve(null);
+      } else {
+        response.json()
+          .then((message) => { reject(message); })
+          .catch(() => { reject({ error: "Cannot parse server response." }) });
+      }
+    }).catch(() => { reject({ error: "Cannot communicate with server." }) });
   });
 }
 
@@ -95,8 +141,6 @@ async function getUserInfo() {
   }
 }
 
-
-
-const API = { getAllCourses, getStudyPlan, deleteStudyPlan, setEnrollmentNull, logIn, logOut, getUserInfo };
+const API = { getAllCourses, getStudyPlan, deleteStudyPlan, setEnrollmentNull, updateEnrollment, addStudyPlan, logIn, logOut, getUserInfo };
 
 export default API;
