@@ -50,7 +50,7 @@ function setEnrollmentNull() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({enrollment: 'NULL'}),
+      body: JSON.stringify({enrollment: null}),
     }).then((response) => {
       if (response.ok) {
         resolve(null);

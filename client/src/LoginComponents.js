@@ -32,8 +32,8 @@ function LoginForm(props) {
       <BackButton/>
       <Row>
         <Col>
-          <h2>Login</h2>
-          <Form>
+          <h2 className='text-center'>Login</h2>
+          <Form >
             {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
             <Form.Group controlId='username'>
               <Form.Label>email</Form.Label>
@@ -43,7 +43,9 @@ function LoginForm(props) {
               <Form.Label>Password</Form.Label>
               <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
             </Form.Group>
-            <Button onClick={handleSubmit}>Login</Button>
+            <Col className='text-center'>
+            <Button className='btn-lg'  onClick={handleSubmit}>Login</Button>
+            </Col>
           </Form>
         </Col>
       </Row>
