@@ -15,8 +15,8 @@ function MyNavbar(props) {
         
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Brand>
-          {props.loggedIn ? <Button onClick={props.logout}>Logout</Button>
-            : <Button onClick={() => navigate(`/login`)}>Login</Button>
+          {props.loggedIn ? <Button className='btn-lg' onClick={props.logout}>Logout</Button>
+            : <Button className='btn-lg' onClick={() => navigate(`/login`)}>Login</Button>
           }
         </Navbar.Brand>
       </Container>

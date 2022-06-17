@@ -130,11 +130,11 @@ function Save(props) {
     const navigate = useNavigate();
     return (
         <Row>
-            <Col md>
-                <Button className='mx-3' variant="primary" onClick={() => props.add()} disabled={!props.save()}>Salva</Button>
+            <Col className='text-center'>
+                <Button className='mx-3' variant="primary" onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
             </Col>
-            <Col md>
-                <Button className='mx-3' variant="danger" onClick={() => navigate('/')}>Cancella</Button>
+            <Col className='text-center'>
+                <Button className='mx-3' variant="danger" onClick={() => navigate('/')}>Cancella modifiche</Button>
             </Col>
         </Row>
     );

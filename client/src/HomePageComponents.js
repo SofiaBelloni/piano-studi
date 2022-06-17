@@ -23,7 +23,7 @@ function AddPlan() {
 
     return (
         <Row>
-            <Col>
+            <Col className='text-center'>
                 <Button onClick={() => navigate(`/edit`)}><MdOutlineAdd /> Aggiungi piano di studio</Button>
             </Col>
         </Row>
@@ -35,10 +35,10 @@ function PlanManagement(props) {
     
     return (
         <Row>
-            <Col>
+            <Col className='text-center'>
                 <Button variant="primary" onClick={() => navigate(`/edit`)}><MdEditNote /> Modifica piano di studio</Button>
             </Col>
-            <Col>
+            <Col className='text-center'>
                 <Button variant="danger" onClick={() => props.delete()}><MdDeleteForever /> Elimina piano di studio</Button>
             </Col>
         </Row>
