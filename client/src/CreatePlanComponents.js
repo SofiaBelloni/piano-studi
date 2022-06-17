@@ -6,12 +6,10 @@ import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents'
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 
-//FIXME: gestire quande fai cancella modifiche che non venga modificato il numero di iscritti
 //FIXME: evidenzia righe non aggiungibili
 
 function CreatePlan(props) {
     const [addedExams, setAddedExams] = useState(props.studyPlan ? props.studyPlan : []);
-    const exams = props.exams;
     const [cfu, setCfu] = useState(props.studyPlan ? computeCFU() : 0);
     const [enrollment, setEnrollment] = useState(props.user.enrollment ? props.user.enrollment : "fullTime");
 
@@ -24,7 +22,7 @@ function CreatePlan(props) {
 
     //when an exam is added to the studyPlan
     function handleAdd(examId) {
-        let newExam = exams.find(e => e.code === examId);
+        let newExam = props.exams.find(e => e.code === examId);
         setAddedExams(oldFilms => [...oldFilms, newExam]);
         setCfu(old => old + newExam.cfu);
         newExam.student += 1;
@@ -33,8 +31,8 @@ function CreatePlan(props) {
     //when an exam is removed from the studyPlan
     function handleDelete(examId) {
         setAddedExams(addedExams.filter(e => e.code !== examId));
-        setCfu(old => old - exams.find(e => e.code === examId).cfu);
-        exams.find(e => e.code === examId).student -= 1;
+        setCfu(old => old - props.exams.find(e => e.code === examId).cfu);
+        props.exams.find(e => e.code === examId).student -= 1;
     }
 
     //when the study plan is confirmed
@@ -44,7 +42,7 @@ function CreatePlan(props) {
 
     //check if is possible to add exam with id examId to the study plan
     const isAddable = (examId) => {
-        const selectedExam = exams.find(e => e.code === examId);
+        const selectedExam = props.exams.find(e => e.code === examId);
         //check cfu
         switch (enrollment) {
             case "fullTime":
@@ -110,18 +108,18 @@ function CreatePlan(props) {
 
     return (
         <>
-            <BackButton />
+            <BackButton setDirty={props.setDirty}/>
             <PlanType setEnrollment={setEnrollment} enrollment={enrollment} user={props.user}></PlanType>
             <TotCFU cfu={cfu} />
             <br />
             {addedExams.length > 0 ?
                 <>
                     <PlanTable exams={addedExams} handleDelete={handleDelete} delete={isDeletable} edit={true} />
-                    <Save save={savePlan} add={handleSave} />
+                    <Save save={savePlan} setDirty={props.setDirty} add={handleSave} />
                 </>
                 : false}
             <br />
-            <ExamTable exams={exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
+            <ExamTable exams={props.exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
         </>
     );
 }
@@ -161,7 +159,7 @@ function Save(props) {
                 <Button className='mx-3' variant="primary" onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
             </Col>
             <Col className='text-center'>
-                <Button className='mx-3' variant="danger" onClick={() => navigate('/')}>Cancella modifiche</Button>
+                <Button className='mx-3' variant="danger" onClick={() => {props.setDirty(true); navigate('/');}}>Cancella modifiche</Button>
             </Col>
         </Row>
     );

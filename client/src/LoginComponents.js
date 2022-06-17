@@ -29,7 +29,7 @@ function LoginForm(props) {
 
   return (
     <Container>
-      <BackButton/>
+      <BackButton setDirty={props.setDirty}/>
       <Row>
         <Col>
           <h2 className='text-center'>Login</h2>

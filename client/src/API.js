@@ -16,7 +16,6 @@ async function getStudyPlan() {
   const response = await fetch(new URL('studyplan', APIURL), {credentials: 'include'});
   const studyplanJson = await response.json();
   if (response.ok) {
-    console.log(studyplanJson);
     return studyplanJson.map((course) => ({ code: course.code, name: course.name, cfu: course.cfu, student: course.student, maxStudent: course.maxStudent, prerequisite: course.prerequisite}));
   } else {
     throw studyplanJson;  // an object with the error coming from the server

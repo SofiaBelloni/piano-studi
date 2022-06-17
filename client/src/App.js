@@ -24,9 +24,8 @@ function App2() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [message, setMessage] = useState(''); //TODO: show messages
+  const [successMessage, setsuccessMessage] = useState(''); //TODO: show messages
   const [dirty, setDirty] = useState(false);
-  //TODO: dirtybit
-
   const navigate = useNavigate();
 
   function handleError(err) {
@@ -123,7 +122,7 @@ function App2() {
 
   return (
     <>
-      <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
+      <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} setDirty={setDirty}/>
       <br />
       <Container>
         <Routes>
@@ -132,7 +131,7 @@ function App2() {
             <LoginForm login={doLogIn} />
             : <Navigate to='/' />} />
           <Route path='/edit' element={loggedIn ?
-            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} />
+            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty}/>
             : <Navigate to='/login' />} />
           <Route path='*' element={<h1>Page not found</h1>}> </Route>
         </Routes>
