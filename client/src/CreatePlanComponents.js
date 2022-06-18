@@ -41,6 +41,9 @@ function CreatePlan(props) {
 
     //check if is possible to add exam with id examId to the study plan
     const isAddable = (examId) => {
+        //to add the exam you have to choose the type of the plan
+        if (!enrollment)
+            return false;
         const selectedExam = props.exams.find(e => e.code === examId);
         //check cfu
         switch (enrollment) {
@@ -106,9 +109,9 @@ function CreatePlan(props) {
     }
 
     const showInstruction = () => {
-        if (enrollment==="fullTime")
+        if (enrollment === "fullTime")
             return "Compila il tuo piano di studio inserendo min: 60, max: 80 crediti formativi.";
-        if(enrollment==="partTime")
+        if (enrollment === "partTime")
             return "Compila il tuo piano di studio inserendo min: 20, max: 40 crediti formativi.";
         return "";
     }
@@ -117,7 +120,7 @@ function CreatePlan(props) {
         <>
             <BackButton setDirty={props.setDirty} />
             <PlanType setEnrollment={setEnrollment} enrollment={enrollment} user={props.user}></PlanType>
-            {enrollment ? <p>{showInstruction()}</p> : false }
+            {enrollment ? <p>{showInstruction()}</p> : <p>Per poter inserire gli esami devi prima scegliere il tipo di iscrizione</p>}
             <TotCFU cfu={cfu} />
             <br />
             {addedExams.length > 0 ?

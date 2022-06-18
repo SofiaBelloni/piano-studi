@@ -16,7 +16,6 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 //FIXME: migliora grafica
 //FIXME: aggiungi messaggi successo / insuccesso
 //FIXME: fai check lato server
-//FIXME: mostra in homepage loggata il tipo di iscrizione e il numero di crediti
 //FIXME: colorare le righe della tabella in edit 
 //FIXME: aggiungi commenti al codice!!!
 //FIXME:controlla che non ci siano warning
@@ -38,7 +37,6 @@ function App2() {
   const [user, setUser] = useState({});
   const [dirty, setDirty] = useState(false);
 
-  const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -63,7 +61,6 @@ function App2() {
   const handleError = (msg) => {
     console.log(msg);
     setErrorMessage(msg);
-    setShowError(true);
   }
 
   useEffect(() => {
@@ -146,17 +143,21 @@ function App2() {
       <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
-        {showSuccess ?
-        (<div
-          className="position-relative"
-        >
-          <ToastContainer position='top-center'>
-            <Toast bg='success' onClose={() => setShowSuccess(false)} show={showSuccess} delay={2000} autohide>
-              <Toast.Body className='text-white'>{successMessage}</Toast.Body>
-            </Toast>
-          </ToastContainer>
-        </div>)
-        : false}
+        {/*errorMessage ?  //Error Alert
+          <Row className="justify-content-center"><Col xs={6}>
+            <Alert variant='danger' onClose={() => setErrorMessage('')} dismissible>{errorMessage}</Alert>
+          </Col></Row>
+  : false*/}
+        {/*showSuccess ?  //Success toast
+          (<div className="position-relative">
+            <ToastContainer position='top-center'>
+              <Toast bg='success' onClose={() => setShowSuccess(false)} show={showSuccess} delay={2000} autohide>
+                <Toast.Body className='text-white'>{successMessage}</Toast.Body>
+              </Toast>
+            </ToastContainer>
+          </div>)
+        : false   */}
+
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={loggedIn ?

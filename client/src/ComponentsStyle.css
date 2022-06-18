@@ -1,4 +1,14 @@
-.dologin{
+.dologin {
     text-align: center;
     font-size: larger;
+}
+
+.info {
+    text-align: center;
+    margin: 5pt;
+    font-size: larger;
+}
+
+.info-div {
+    border: double black;
 }
