@@ -6,12 +6,10 @@ import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents'
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 
-//FIXME: evidenzia righe non aggiungibili
-
 function CreatePlan(props) {
     const [addedExams, setAddedExams] = useState(props.studyPlan ? props.studyPlan : []);
     const [cfu, setCfu] = useState(props.studyPlan ? computeCFU() : 0);
-    const [enrollment, setEnrollment] = useState(props.user.enrollment ? props.user.enrollment : "fullTime");
+    const [enrollment, setEnrollment] = useState(props.user.enrollment ? props.user.enrollment : undefined);
 
     //compute the number of cfu of the current study plan
     function computeCFU() {
@@ -37,7 +35,8 @@ function CreatePlan(props) {
 
     //when the study plan is confirmed
     function handleSave() {
-        props.save(enrollment, addedExams);
+        if (enrollment)
+            props.save(enrollment, addedExams);
     }
 
     //check if is possible to add exam with id examId to the study plan
@@ -106,19 +105,28 @@ function CreatePlan(props) {
         }
     }
 
+    const showInstruction = () => {
+        if (enrollment==="fullTime")
+            return "Compila il tuo piano di studio inserendo min: 60, max: 80 crediti formativi.";
+        if(enrollment==="partTime")
+            return "Compila il tuo piano di studio inserendo min: 20, max: 40 crediti formativi.";
+        return "";
+    }
+
     return (
         <>
-            <BackButton setDirty={props.setDirty}/>
+            <BackButton setDirty={props.setDirty} />
             <PlanType setEnrollment={setEnrollment} enrollment={enrollment} user={props.user}></PlanType>
+            {enrollment ? <p>{showInstruction()}</p> : false }
             <TotCFU cfu={cfu} />
             <br />
             {addedExams.length > 0 ?
                 <>
                     <PlanTable exams={addedExams} handleDelete={handleDelete} delete={isDeletable} edit={true} />
                     <Save save={savePlan} setDirty={props.setDirty} add={handleSave} />
+                    <br />
                 </>
                 : false}
-            <br />
             <ExamTable exams={props.exams} edit={true} handleAdd={handleAdd} addable={isAddable} ></ExamTable>
         </>
     );
@@ -126,26 +134,28 @@ function CreatePlan(props) {
 
 function TotCFU(props) {
     return (
-        <Row>
-            <Col>
-                <Form.Label>Crediti selezionati:</Form.Label>
+        <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3" >Crediti formativi selezionati:</Form.Label>
+            <Col sm="1">
+                <Form.Control value={props.cfu} readOnly />
             </Col>
-            <Col>
-                <Form.Control value={props.cfu} disabled />
-            </Col>
-        </Row>
+        </Form.Group>
     );
 }
 
 function PlanType(props) {
+
     return (
         <>
-            <Form.Group className="mb-3">
-                <Form.Label>Tipo di iscrizione:</Form.Label>
-                <Form.Select aria-label="Tipo di iscrizione" value={props.enrollment} onChange={(event) => props.setEnrollment(event.target.value)} disabled={props.user.enrollment ? true : false}> Tipo di iscrizione
-                    <option value="fullTime">Full Time</option>
-                    <option value="partTime">Part Time</option>
-                </Form.Select>
+            <Form.Group as={Row} className="my-3">
+                <Form.Label column sm="3">Seleziona il tipo di iscrizione:</Form.Label>
+                <Col sm="2">
+                    <Form.Select aria-label="Tipo di iscrizione" value={props.enrollment} onChange={(event) => { props.setEnrollment(event.target.value); }} disabled={props.enrollment ? true : false}> Tipo di iscrizione
+                        <option />
+                        <option value="fullTime">Full Time</option>
+                        <option value="partTime">Part Time</option>
+                    </Form.Select>
+                </Col>
             </Form.Group>
         </>
     );
@@ -159,7 +169,7 @@ function Save(props) {
                 <Button className='mx-3' variant="primary" onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
             </Col>
             <Col className='text-center'>
-                <Button className='mx-3' variant="danger" onClick={() => {props.setDirty(true); navigate('/');}}>Cancella modifiche</Button>
+                <Button className='mx-3' variant="danger" onClick={() => { props.setDirty(true); navigate('/'); }}>Cancella modifiche</Button>
             </Col>
         </Row>
     );

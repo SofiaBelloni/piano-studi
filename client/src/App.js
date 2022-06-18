@@ -9,6 +9,18 @@ import { useEffect, useState } from 'react';
 import API from './API';
 import { CreatePlan } from './CreatePlanComponents';
 
+//FIXME: rileggere le specifiche
+//FIXME: PRECARICA DATABASE
+//FIXME: migliora grafica
+//FIXME: aggiungi messaggi successo / insuccesso
+//FIXME: fai check lato server
+//FIXME: mostra in homepage loggata il tipo di iscrizione e il numero di crediti
+//FIXME: colorare le righe della tabella in edit 
+//FIXME: autenticazione, miglkiora controlli e mostra quando sbagli credenziali
+//FIXME: aggiungi commenti al codice!!!
+//FIXME:controlla che non ci siano warning
+//FIXME: compila readme
+
 function App() {
   return (
     <Router>
@@ -61,11 +73,10 @@ function App2() {
       .then(user => {
         setLoggedIn(true);
         setUser(user);
-        setMessage('');
         navigate('/');
       })
       .catch(err => {
-        setMessage(err);
+        setMessage('Impossibile effettuare il login');
       }
       )
   }
@@ -122,18 +133,18 @@ function App2() {
 
   return (
     <>
-      <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} setDirty={setDirty}/>
+      <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={loggedIn ?
-            <LoginForm login={doLogIn} />
-            : <Navigate to='/' />} />
+            <Navigate to='/' /> 
+            : <LoginForm login={doLogIn} setDirty={setDirty}/>}/>
           <Route path='/edit' element={loggedIn ?
-            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty}/>
+            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty} />
             : <Navigate to='/login' />} />
-          <Route path='*' element={<h1>Page not found</h1>}> </Route>
+          <Route path='*' element={<h1 className='text-center'>Page not found</h1>}> </Route>
         </Routes>
       </Container>
     </>
