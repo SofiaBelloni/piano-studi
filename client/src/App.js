@@ -1,13 +1,15 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
+import { Container, Button, Row, Col, Alert } from 'react-bootstrap';
 import { HomePage } from './HomePageComponents';
 import { MyNavbar } from './NavbarComponents';
 import { LoginForm } from './LoginComponents';
 import { useEffect, useState } from 'react';
 import API from './API';
 import { CreatePlan } from './CreatePlanComponents';
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
 //FIXME: PRECARICA DATABASE
@@ -34,14 +36,14 @@ function App2() {
   const [studyPlan, setStudyPlan] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
-  const [message, setMessage] = useState(''); //TODO: show messages
-  const [successMessage, setsuccessMessage] = useState(''); //TODO: show messages
   const [dirty, setDirty] = useState(false);
-  const navigate = useNavigate();
 
-  function handleError(err) {
-    console.log(err);
-  }
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
@@ -53,11 +55,22 @@ function App2() {
     }
   };
 
+  const handleSuccess = (msg) => {
+    setSuccessMessage(msg);
+    setShowSuccess(true);
+  }
+
+  const handleError = (msg) => {
+    console.log(msg);
+    setErrorMessage(msg);
+    setShowError(true);
+  }
+
   useEffect(() => {
     checkAuth();
     API.getAllCourses()
       .then((exams) => { setExams(exams); setDirty(false); })
-      .catch(err => console.log(err))
+      .catch(err => handleError(err))
   }, [dirty])
 
   useEffect(() => {
@@ -75,7 +88,7 @@ function App2() {
         navigate('/');
       })
       .catch(err => {
-        setMessage(err);
+        handleError(err);
       }
       )
   }
@@ -93,14 +106,14 @@ function App2() {
       .then(() => API.setEnrollmentNull())
       .then(() => {
         navigate('/');
-        //FIXME: set success message
+        handleSuccess("Piano di studio eliminato correttamente");
         setStudyPlan([]);
         user.enrollment = null;
         setDirty(true);
       })
       .catch(err => {
-        setMessage(err);
-      }) //TODO: add messagge
+        handleError(err);
+      })
   }
 
   const addStudyPlan = async (enrollment, studyPlan) => {
@@ -118,16 +131,14 @@ function App2() {
       .then(() => API.incrementStudentsNumber())
       .then(() => {
         navigate('/');
-        //FIXME: set success message
+        handleSuccess("Piano di studio inserito correttamente")
         setStudyPlan(studyPlan);
         user.enrollment = enrollment;
         setDirty(true);
       })
       .catch(err => {
-        setMessage(err);
+        setErrorMessage(err);
       })
-    //TODO: 
-    //success message
   }
 
   return (
@@ -135,9 +146,17 @@ function App2() {
       <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
-      <Row className="justify-content-center"><Col xs={6}>
-          {message ? <Alert variant='danger' onClose={() => setMessage('')} dismissible>{message}</Alert> : false}
-        </Col></Row>
+        {showSuccess ?
+        (<div
+          className="position-relative"
+        >
+          <ToastContainer position='top-center'>
+            <Toast bg='success' onClose={() => setShowSuccess(false)} show={showSuccess} delay={2000} autohide>
+              <Toast.Body className='text-white'>{successMessage}</Toast.Body>
+            </Toast>
+          </ToastContainer>
+        </div>)
+        : false}
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={loggedIn ?
