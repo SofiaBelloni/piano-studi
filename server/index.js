@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(
   function (username, password, done) {
     userDao.getUser(username, password).then((user) => {
       if (!user)
-        return done(null, false, { message: 'Incorrect username and/or password.' });
+        return done(null, false, { message: 'Username o password erreti' });
 
       return done(null, user);
     })

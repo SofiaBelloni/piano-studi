@@ -13,38 +13,40 @@ function LoginForm(props) {
     setErrorMessage('');
     const credentials = { username, password };
 
-    // SOME VALIDATION, ADD MORE!!!
+    // validetion
     let valid = true;
-    if (username === '' || password === '')
+    if (username === '') {
       valid = false;
-
+      setErrorMessage('Inserire username valido');
+    } else if (password === '') {
+      valid = false;
+      setErrorMessage('Inserire password valida');
+    }
     if (valid) {
       props.login(credentials);
-    }
-    else {
-      // show a better error message...
-      setErrorMessage('Error(s) in the form, please fix it.')
     }
   };
 
   return (
     <Container>
-      <BackButton setDirty={props.setDirty}/>
-      <Row>
-        <Col>
+      <Row className="justify-content-center"><Col xs={6}>
+        {errorMessage ? <Alert className='text-center' variant='danger' onClose={() => setErrorMessage('')} dismissible>{errorMessage}</Alert> : ''}
+      </Col></Row>
+      <BackButton setDirty={props.setDirty} />
+      <Row className="justify-content-center">
+        <Col xs={6}>
           <h2 className='text-center'>Login</h2>
           <Form >
-            {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
             <Form.Group controlId='username'>
-              <Form.Label>email</Form.Label>
+              <Form.Label>Email:</Form.Label>
               <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
             </Form.Group>
-            <Form.Group controlId='password'>
-              <Form.Label>Password</Form.Label>
+            <Form.Group className='' controlId='password'>
+              <Form.Label>Password:</Form.Label>
               <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
             </Form.Group>
-            <Col className='text-center'>
-            <Button className='btn-lg'  onClick={handleSubmit}>Login</Button>
+            <Col className='text-center my-3'>
+              <Button onClick={handleSubmit}>Login</Button>
             </Col>
           </Form>
         </Col>

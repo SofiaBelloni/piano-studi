@@ -18,7 +18,6 @@ exports.getUserById = (id) => {
         else if (row === undefined)
           resolve({error: 'User not found.'});
         else {
-          // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
           const user = {id: row.id, username: row.email, name: row.name, enrollment:row.enrollment};
           resolve(user);
         }

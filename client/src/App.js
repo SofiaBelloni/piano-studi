@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import { HomePage } from './HomePageComponents';
 import { MyNavbar } from './NavbarComponents';
 import { LoginForm } from './LoginComponents';
@@ -16,7 +16,6 @@ import { CreatePlan } from './CreatePlanComponents';
 //FIXME: fai check lato server
 //FIXME: mostra in homepage loggata il tipo di iscrizione e il numero di crediti
 //FIXME: colorare le righe della tabella in edit 
-//FIXME: autenticazione, miglkiora controlli e mostra quando sbagli credenziali
 //FIXME: aggiungi commenti al codice!!!
 //FIXME:controlla che non ci siano warning
 //FIXME: compila readme
@@ -76,7 +75,7 @@ function App2() {
         navigate('/');
       })
       .catch(err => {
-        setMessage('Impossibile effettuare il login');
+        setMessage(err);
       }
       )
   }
@@ -136,11 +135,14 @@ function App2() {
       <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
+      <Row className="justify-content-center"><Col xs={6}>
+          {message ? <Alert variant='danger' onClose={() => setMessage('')} dismissible>{message}</Alert> : false}
+        </Col></Row>
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={loggedIn ?
-            <Navigate to='/' /> 
-            : <LoginForm login={doLogIn} setDirty={setDirty}/>}/>
+            <Navigate to='/' />
+            : <LoginForm login={doLogIn} setDirty={setDirty} />} />
           <Route path='/edit' element={loggedIn ?
             <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty} />
             : <Navigate to='/login' />} />
