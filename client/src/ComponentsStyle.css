@@ -1,6 +1,7 @@
 .dologin {
     text-align: center;
     font-size: larger;
+    color: #2caedd;
 }
 
 .info {
@@ -11,4 +12,53 @@
 
 .info-div {
     border: double black;
+}
+
+.myNavBar{
+    background-color: #2E4C6D;
+}
+
+.icon, .icon:focus{
+    background-color: transparent;
+    border-color: transparent;
+    margin-top: 0%;
+}
+
+
+.icon:hover{
+    background-color: transparent;
+    border-color: #2caedd;
+}
+
+.primary, .primary:focus{
+    background-color:#2caedd;
+    border-color: #DADDFC;
+}
+
+.primary:hover{
+    background-color: #DADDFC;
+    border-color:#2E4C6D;
+    color: #2E4C6D;
+
+}
+
+.secondary{
+    background-color:#ff8c69;
+    border-color: #f86e43;
+}
+
+.danger:hover{
+    color: #da3845;
+    border-color: #da3845;
+    background-color: #fcdada;
+}
+
+.secondary:hover, .secondary:focus{
+    background-color:#f86e43;
+    border-color: #DADDFC;
+}
+
+.secondary:disabled{
+    background-color:#8a4c39;
+    border-color: #f86e43;
 }

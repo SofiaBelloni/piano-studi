@@ -1,6 +1,7 @@
 import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
 import { Button, Row, Col } from 'react-bootstrap';
 import { MdArrowBack } from "react-icons/md";
+import './ComponentsStyle.css'
 
 function BackButton(props){
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ function BackButton(props){
     return(
         <Row>
         <Col>
-          <Button onClick={() => {props.setDirty(true); navigate(`/`);}}><MdArrowBack/></Button>
+          <Button className='primary' onClick={() => {props.setDirty(true); navigate(`/`);}}><MdArrowBack/></Button>
         </Col>
       </Row>
     );

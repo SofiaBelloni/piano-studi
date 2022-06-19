@@ -66,11 +66,11 @@ function ExamData(props) {
       <td>{props.exam.cfu}</td>
       <td>{props.exam.student}</td>
       <td>{props.exam.maxStudent}</td>
-      <td><Button onClick={() => { props.moreInfo(props.expand) }}>
-        {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
+      <td><Button className='secondary' onClick={() => { props.moreInfo(props.expand) }}>
+        {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore/>}</Button></td>
       {props.edit ?
         <td>
-          <Button onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
+          <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
         </td>
         : false
 

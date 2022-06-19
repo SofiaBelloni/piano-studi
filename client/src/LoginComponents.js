@@ -1,6 +1,7 @@
 import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { BackButton } from './Utility';
+import './ComponentsStyle.css'
 
 
 function LoginForm(props) {
@@ -46,7 +47,7 @@ function LoginForm(props) {
               <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
             </Form.Group>
             <Col className='text-center my-3'>
-              <Button onClick={handleSubmit}>Login</Button>
+              <Button className='primary' onClick={handleSubmit}>Login</Button>
             </Col>
           </Form>
         </Col>

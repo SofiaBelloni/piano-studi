@@ -169,7 +169,7 @@ function Save(props) {
     return (
         <Row>
             <Col className='text-center'>
-                <Button className='mx-3' variant="primary" onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
+                <Button className='mx-3 primary' onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
             </Col>
             <Col className='text-center'>
                 <Button className='mx-3' variant="danger" onClick={() => { props.setDirty(true); navigate('/'); }}>Cancella modifiche</Button>

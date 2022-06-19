@@ -1,5 +1,6 @@
 import { Table, Button } from 'react-bootstrap';
 import { MdDeleteForever } from "react-icons/md";
+import './ComponentsStyle.css'
 
 function PlanTable(props) {
     return (
@@ -37,7 +38,7 @@ function PlanData(props) {
             <td>{props.exam.cfu}</td>
             { props.edit ?
                 <td>
-                    <Button onClick={() => props.handleDelete(props.exam.code)} disabled={!props.delete(props.exam.code)}><MdDeleteForever /></Button>
+                    <Button className='secondary' onClick={() => props.handleDelete(props.exam.code)} disabled={!props.delete(props.exam.code)}><MdDeleteForever /></Button>
                 </td>
                 : false
             }
