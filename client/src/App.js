@@ -13,10 +13,8 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
 //FIXME: PRECARICA DATABASE
-//FIXME: migliora grafica
 //FIXME: aggiungi messaggi successo / insuccesso
 //FIXME: fai check lato server
-//FIXME: colorare le righe della tabella in edit 
 //FIXME: aggiungi commenti al codice!!!
 //FIXME:controlla che non ci siano warning
 //FIXME: compila readme

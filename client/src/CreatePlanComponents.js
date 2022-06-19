@@ -43,27 +43,27 @@ function CreatePlan(props) {
     const isAddable = (examId) => {
         //to add the exam you have to choose the type of the plan
         if (!enrollment)
-            return false;
+            return { addable: false, value: null };
         const selectedExam = props.exams.find(e => e.code === examId);
+        //to add an exam only once
+        if (addedExams.find(e => e.code === examId))
+            return { addable: false, value: 'presence' };
         //check cfu
         switch (enrollment) {
             case "fullTime":
                 if (selectedExam.cfu + cfu >= 80)
-                    return false;
+                    return { addable: false, value: 'cfu' };
                 break;
             case "partTime":
                 if (selectedExam.cfu + cfu >= 40)
-                    return false;
+                    return { addable: false, value: 'cfu' };
                 break;
             default:
         }
-        //to add an exam only once
-        if (addedExams.find(e => e.code === examId))
-            return false;
         //check prerequisite
         if (selectedExam.prerequisite !== null) {
             if (!addedExams.find(e => e.code === selectedExam.prerequisite))
-                return false;
+                return { addable: false, value: 'prerequisite' };
         }
         //check incompatibility
         if (selectedExam.incompatibility[0] !== null) {
@@ -74,12 +74,12 @@ function CreatePlan(props) {
                 }
             });
             if (!value)
-                return false;
+                return { addable: false, value: 'incompatibility' };
         }
         //check max number of student
         if (selectedExam.maxStudent !== null && selectedExam.student >= selectedExam.maxStudent)
-            return false;
-        return true;
+            return { addable: false, value: 'max' };
+        return { addable: true, value: null };
     }
 
     //check if is possible to remove an exam with id examId from the study plan
@@ -172,7 +172,7 @@ function Save(props) {
                 <Button className='mx-3 primary' onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
             </Col>
             <Col className='text-center'>
-                <Button className='mx-3' variant="danger" onClick={() => { props.setDirty(true); navigate('/'); }}>Cancella modifiche</Button>
+                <Button className='mx-3 danger' variant="danger" onClick={() => { props.setDirty(true); navigate('/'); }}>Cancella modifiche</Button>
             </Col>
         </Row>
     );

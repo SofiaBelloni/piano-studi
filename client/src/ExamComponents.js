@@ -1,6 +1,7 @@
 import { Table, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd } from "react-icons/md";
+import './TableColor.css'
 
 function ExamTable(props) {
 
@@ -35,9 +36,14 @@ function ExamRow(props) {
     setExpand(!old);
   }
 
+  let add = null;
+  //render color table
+  if (props.edit) {
+    add = props.addable(props.exam.code); //return value of isAddable function
+   }
   return (
     <>
-      <tr><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={props.addable} handleAdd={props.handleAdd} /></tr>
+      <tr className={add?add.value:null}><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={add} handleAdd={props.handleAdd} /></tr>
       {expand ? <ExamInfo exam={props.exam} /> : false}
     </>
   );
@@ -59,6 +65,7 @@ function ExamInfo(props) {
 }
 
 function ExamData(props) {
+
   return (
     <>
       <td>{props.exam.code}</td>
@@ -67,10 +74,10 @@ function ExamData(props) {
       <td>{props.exam.student}</td>
       <td>{props.exam.maxStudent}</td>
       <td><Button className='secondary' onClick={() => { props.moreInfo(props.expand) }}>
-        {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore/>}</Button></td>
+        {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
       {props.edit ?
         <td>
-          <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable(props.exam.code)} ><MdOutlineAdd /></Button>
+          <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable.addable} ><MdOutlineAdd /></Button>
         </td>
         : false
 
