@@ -7,21 +7,20 @@ import './ComponentsStyle.css'
 function LoginForm(props) {
   const [username, setUsername] = useState('test@polito.it');
   const [password, setPassword] = useState('password');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setErrorMessage('');
+    props.setErrorMessage('');
     const credentials = { username, password };
 
     // validetion
     let valid = true;
     if (username === '') {
       valid = false;
-      setErrorMessage('Inserire username valido');
+      props.setErrorMessage('Inserire username valido');
     } else if (password === '') {
       valid = false;
-      setErrorMessage('Inserire password valida');
+      props.setErrorMessage('Inserire password valida');
     }
     if (valid) {
       props.login(credentials);
@@ -30,9 +29,6 @@ function LoginForm(props) {
 
   return (
     <Container>
-      <Row className="justify-content-center"><Col xs={6}>
-        {errorMessage ? <Alert className='text-center' variant='danger' onClose={() => setErrorMessage('')} dismissible>{errorMessage}</Alert> : ''}
-      </Col></Row>
       <BackButton setDirty={props.setDirty} />
       <Row className="justify-content-center">
         <Col xs={6}>
