@@ -13,11 +13,11 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
 //FIXME: PRECARICA DATABASE
-//FIXME: aggiungi messaggi successo / insuccesso
 //FIXME: fai check lato server
 //FIXME: aggiungi commenti al codice!!!
-//FIXME:controlla che non ci siano warning
+//FIXME: controlla che non ci siano warning
 //FIXME: compila readme
+//FIXME: handle error
 
 function App() {
   return (
@@ -41,16 +41,6 @@ function App2() {
 
   const navigate = useNavigate();
 
-  const checkAuth = async () => {
-    try {
-      const user = await API.getUserInfo();
-      setLoggedIn(true);
-      setUser(user);
-    } catch (err) {
-      handleError(err);
-    }
-  };
-
   const handleSuccess = (msg) => {
     setSuccessMessage(msg);
     setShowSuccess(true);
@@ -60,6 +50,15 @@ function App2() {
     console.log(msg);
     setErrorMessage(msg);
   }
+
+  const checkAuth = async () => {
+    try {
+      const user = await API.getUserInfo();
+      setLoggedIn(true);
+      setUser(user);
+    } catch (err) {
+    }
+  };
 
   useEffect(() => {
     checkAuth();
@@ -83,7 +82,7 @@ function App2() {
         navigate('/');
       })
       .catch(err => {
-        handleError(err);
+       // handleError(err);
       }
       )
   }
@@ -107,7 +106,7 @@ function App2() {
         setDirty(true);
       })
       .catch(err => {
-        handleError(err);
+       // handleError(err);
       })
   }
 
@@ -118,10 +117,10 @@ function App2() {
       await API.decrementStudentsNumber()
         .then(() => API.deleteStudyPlan())
     }
-    //add new study plan
-    API.addStudyPlan(studyPlan.map((e) => e.code))
-      //update student's enrollment
-      .then(() => API.updateEnrollment(enrollment))
+    //update student's enrollment
+    API.updateEnrollment(enrollment)
+      //add new study plan
+      .then(() => API.addStudyPlan(studyPlan.map((e)=>e.code)))
       //update number of students
       .then(() => API.incrementStudentsNumber())
       .then(() => {
@@ -132,7 +131,7 @@ function App2() {
         setDirty(true);
       })
       .catch(err => {
-        setErrorMessage(err);
+       // handleError(err);
       })
   }
 
@@ -141,12 +140,12 @@ function App2() {
       <MyNavbar name={user.name} loggedIn={loggedIn} logout={doLogOut} />
       <br />
       <Container>
-        {/*errorMessage ?  //Error Alert
+        {errorMessage ?  //Error Alert
           <Row className="justify-content-center"><Col xs={6}>
             <Alert variant='danger' onClose={() => setErrorMessage('')} dismissible>{errorMessage}</Alert>
           </Col></Row>
-  : false*/}
-        {/*showSuccess ?  //Success toast
+          : false}
+        {showSuccess ?  //Success toast
           (<div className="position-relative">
             <ToastContainer position='top-center'>
               <Toast bg='success' onClose={() => setShowSuccess(false)} show={showSuccess} delay={2000} autohide>
@@ -154,13 +153,13 @@ function App2() {
               </Toast>
             </ToastContainer>
           </div>)
-        : false   */}
+          : false}
 
         <Routes>
           <Route path='/' element={<HomePage exams={exams} studyPlan={studyPlan} delete={deleteStudyPlan} loggedIn={loggedIn} user={user}></HomePage>} />
           <Route path='/login' element={loggedIn ?
             <Navigate to='/' />
-            : <LoginForm login={doLogIn} setDirty={setDirty} />} />
+            : <LoginForm login={doLogIn} setDirty={setDirty} setErrorMessage={setErrorMessage} />} />
           <Route path='/edit' element={loggedIn ?
             <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty} />
             : <Navigate to='/login' />} />
