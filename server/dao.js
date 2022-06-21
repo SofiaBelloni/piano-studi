@@ -128,7 +128,7 @@ exports.getStudentNumber = (userId) => {
         reject(err);
         return;
       }
-      const number = rows.map(row => ({student: row.student, maxStudent: row.maxStudent}));
+      const number = rows.map(row => ({code: row.code, student: row.student, maxStudent: row.maxStudent}));
       console.log(number);
       resolve(number);
     });

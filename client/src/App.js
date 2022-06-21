@@ -12,6 +12,7 @@ import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
+//FIXME: login con invio
 //FIXME: PRECARICA DATABASE
 //FIXME: fai check lato server
 //FIXME: aggiungi commenti al codice!!!
@@ -64,14 +65,14 @@ function App2() {
     checkAuth();
     API.getAllCourses()
       .then((exams) => { setExams(exams); setDirty(false); })
-      .catch(err => handleError(err))
+      .catch(err => console.log(err))
   }, [dirty])
 
   useEffect(() => {
     if (loggedIn)
       API.getStudyPlan()
         .then((courses) => { setStudyPlan(courses); setDirty(false); })
-        .catch(err => handleError(err))
+        .catch(err => console.log(err))
   }, [loggedIn, dirty])
 
   const doLogIn = (credentials) => {
@@ -116,6 +117,10 @@ function App2() {
       //delete old study plan
       await API.decrementStudentsNumber()
         .then(() => API.deleteStudyPlan())
+        .catch(err => {
+          // handleError(err);
+          console.log(err);
+         })
     }
     //update student's enrollment
     API.updateEnrollment(enrollment)
@@ -132,6 +137,7 @@ function App2() {
       })
       .catch(err => {
        // handleError(err);
+       console.log(err);
       })
   }
 

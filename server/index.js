@@ -154,12 +154,12 @@ app.put('/api/enrollment', isLoggedIn, [
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-  const enrollement = {
+  const enrollment = {
     id: req.user.id,
     enrollment: req.body.enrollment,
   };
   try {
-    await dao.updateEnrollment(enrollement);
+    await dao.updateEnrollment(enrollment);
     res.status(200).end();
   }
   catch (err) {
@@ -169,12 +169,14 @@ app.put('/api/enrollment', isLoggedIn, [
 
 //UPDATE increment student's number api/increment/students
 app.put('/api/increment/students', isLoggedIn, [
-  check().custom(({ req }) => {
-    const number = dao.getStudentNumber(req.user.id);
-    for(const course of number){
-      if (course.maxStudent !== null && course.student >= course.maxStudent)
-        throw new Error(`Error: course ${course.code} reached max number of students`);
-    }
+  check().custom((val, { req }) => {
+    return dao.getStudentNumber(req.user.id)
+    .then(number => {
+      for(const course of number){
+        if (course.maxStudent !== null && course.student >= course.maxStudent)
+          throw new Error(`Error: course ${course.code} reached max number of students`);
+      }
+    })
   })], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -191,7 +193,15 @@ app.put('/api/increment/students', isLoggedIn, [
 
 //UPDATE decrement student's number api/decrement/students
 app.put('/api/decrement/students', isLoggedIn, [
-  //TODO: check
+  check().custom((val, { req }) => {
+    return dao.getStudentNumber(req.user.id)
+    .then(number => {
+      for(const course of number){
+        if (course.student - 1 < 0)
+          throw new Error(`Error: course ${course.code} has not students enrolled`);
+      }
+    })
+  })
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -209,25 +219,25 @@ app.put('/api/decrement/students', isLoggedIn, [
 //ADD /api/studyplan
 app.post('/api/studyplan', isLoggedIn, [
   check('courses').isArray(),
-  check('courses.*.code').isString().isLength({ min: 7, max: 7 }),
+  check('courses.*').isString().isLength({ min: 7, max: 7 }),
   check('courses').custom((studyPlanCodes, { req }) => {
     return dao.listCourses()
       .then(courses => {
         //read complete data from db
         const studyPlan = courses.filter(c => {
-          return studyPlanCodes.some(s => { return s.code === c.code });
+          return studyPlanCodes.some(s => { return s === c.code });
         })
         //check that there are all courses' code in the db
-        if (studyPlan.length() !== studyPlanCodes.length()) {
+        if (studyPlan.length !== studyPlanCodes.length) {
           throw new Error("There is a course code not valid");
         }
 
         //check credits
         let totalCFU = 0;
-        studyPlan.forEach(e => totalCFU += e.cfu);
-        if (req.user.enrollement === null) throw new Error('Enrollment Error');
-        const maxCFU = req.user.enrollement === 'fullTime' ? 80 : 40;
-        const minCFU = req.user.enrollement === 'fullTime' ? 60 : 20;
+        studyPlan.forEach((e) => {totalCFU += e.cfu});
+        if (req.user.enrollment === null) throw new Error('Enrollment Error');
+        const maxCFU = req.user.enrollment === 'fullTime' ? 80 : 40;
+        const minCFU = req.user.enrollment === 'fullTime' ? 60 : 20;
         if (totalCFU > maxCFU || totalCFU < minCFU)
           throw new Error('Invalid number of CFU');
 
@@ -243,14 +253,13 @@ app.post('/api/studyplan', isLoggedIn, [
           if (course.incompatibility[0] !== null) {
             course.incompatibility.forEach(inc => {
               if (inc !== null && studyPlan.find(e => e.code === inc)) {
-                throw new Error(`Incompatible course ${inc} for course ${e.code}`);
+                throw new Error(`Incompatible course ${inc} for course ${course.code}`);
               }
             });
           }
         }
       })
   })
-
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
