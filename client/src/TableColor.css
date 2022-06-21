@@ -1,15 +1,28 @@
-.cfu{
+.cfu {
     background-color: #e6e6ff;
 }
-.prerequisite{
+
+.prerequisite {
     background-color: #e6ccff;
 }
-.presence{
+
+.presence {
     background-color: #ccffb3;
 }
-.incompatibility{
+
+.incompatibility {
     background-color: #ff9999;
 }
-.max{
+
+.max {
     background-color: #b8b894;
+}
+
+.legend span {
+    border: 1px solid black;
+    float: left;
+    width: 30px;
+    height: 15px;
+    margin-top: 1px;
+    margin-left: 1px;
 }

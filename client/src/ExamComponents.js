@@ -9,6 +9,7 @@ function ExamTable(props) {
 
   return (
     <>
+      {props.edit ? <ColorLegend /> : false}
       <h1>Offerta formativa</h1>
       <Table>
         <thead>
@@ -81,13 +82,40 @@ function ExamData(props) {
         <td>
           <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{props.addable.reason}</Tooltip>}>
             <span className="d-inline-block">
-            <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable.addable} ><MdOutlineAdd /></Button>
+              <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable.addable} ><MdOutlineAdd /></Button>
             </span>
           </OverlayTrigger>
-         </td>
+        </td>
         : false
 
       }
+    </>
+  );
+}
+
+function ColorLegend() {
+  return (
+    <>
+      <br />
+      <Table borderless size="sm">
+        <tbody>
+          <tr className='legend'>
+            <td><span className="presence" /></td>
+            <td>Esame aggiunto al piano di studio</td>
+            <td><span className="cfu" /></td>
+            <td>CFU rimasti insufficienti</td>
+            <td><span className="incompatibility" /></td>
+            <td>Esame incompatibile con il piano di studio</td>
+          </tr>
+          <tr className='legend'>
+            <td><span className="prerequisite" /></td>
+            <td>E' presente un esame propedeutico</td>
+            <td><span className="max" /></td>
+            <td>Massimo numero di iscritti raggiunto</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </Table>
     </>
   );
 }

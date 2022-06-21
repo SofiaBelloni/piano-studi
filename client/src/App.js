@@ -11,12 +11,8 @@ import { CreatePlan } from './CreatePlanComponents';
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
-//FIXME: rileggere le specifiche
-//FIXME: PRECARICA DATABASE
-//FIXME: legenda
 //FIXME: aggiungi commenti al codice!!!
-//FIXME: controlla che non ci siano warning
-//FIXME: compila readme
+//FIXME: foto readme
 
 function App() {
   return (
@@ -63,14 +59,14 @@ function App2() {
     checkAuth();
     API.getAllCourses()
       .then((exams) => { setExams(exams); setDirty(false); })
-      .catch(err => console.log(err))
+      .catch(err => handleError(err, ""))
   }, [dirty])
 
   useEffect(() => {
     if (loggedIn)
       API.getStudyPlan()
         .then((courses) => { setStudyPlan(courses); setDirty(false); })
-        .catch(err => console.log(err))
+        .catch(err => handleError(err, ""))
   }, [loggedIn, dirty])
 
   const doLogIn = (credentials) => {
