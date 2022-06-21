@@ -14,11 +14,9 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 //FIXME: rileggere le specifiche
 //FIXME: login con invio
 //FIXME: PRECARICA DATABASE
-//FIXME: fai check lato server
 //FIXME: aggiungi commenti al codice!!!
 //FIXME: controlla che non ci siano warning
 //FIXME: compila readme
-//FIXME: handle error
 
 function App() {
   return (
@@ -47,8 +45,8 @@ function App2() {
     setShowSuccess(true);
   }
 
-  const handleError = (msg) => {
-    console.log(msg);
+  const handleError = (err, msg) => {
+    console.log(err);
     setErrorMessage(msg);
   }
 
@@ -83,7 +81,7 @@ function App2() {
         navigate('/');
       })
       .catch(err => {
-       // handleError(err);
+        handleError(err, err);
       }
       )
   }
@@ -107,7 +105,7 @@ function App2() {
         setDirty(true);
       })
       .catch(err => {
-       // handleError(err);
+        handleError(err, "Errore durante la cancellazione del piano di studio. Impossibile completare l'operazione.");
       })
   }
 
@@ -118,8 +116,7 @@ function App2() {
       await API.decrementStudentsNumber()
         .then(() => API.deleteStudyPlan())
         .catch(err => {
-          // handleError(err);
-          console.log(err);
+          handleError(err, "Errore durante la cancellazione del piano di studio. Impossibile completare l'operazione.");
          })
     }
     //update student's enrollment
@@ -136,8 +133,7 @@ function App2() {
         setDirty(true);
       })
       .catch(err => {
-       // handleError(err);
-       console.log(err);
+          handleError(err, "Errore durante l'inserimento del piano di studio. Impossibile completare l'operazione.");
       })
   }
 
