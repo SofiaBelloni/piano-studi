@@ -117,3 +117,20 @@ exports.decrementStudentsNumber = (id) => {
       })
   });
 }
+
+//other query for check
+// get number of student enrolled and max student
+exports.getStudentNumber = (userId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT code, student, maxStudent FROM exams WHERE code IN (SELECT code FROM studyPlans WHERE id=?)";
+    db.all(sql, [userId], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const number = rows.map(row => ({student: row.student, maxStudent: row.maxStudent}));
+      console.log(number);
+      resolve(number);
+    });
+  });
+};
