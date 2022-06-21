@@ -185,10 +185,10 @@
 
 ## Users Credentials
 
-| email | password | name |
-|-------|----------|------|
-| test@polito.it | password | test |
-| sofiabelloni@polito.it | password | Sofia |
-| stefano@gmail.com | password | Stefano |
-| mariorossi@polito.com | password | Mario |
-| john.doe@gmail.com | password | John |
+| email | password | name | enrollmen |
+|-------|----------|------|-----------|
+| test@polito.it | password | test | fullTime |
+| sofiabelloni@polito.it | password | Sofia | partTime |
+| stefano@gmail.com | password | Stefano | partTime |
+| mariorossi@polito.com | password | Mario | NULL | 
+| john.doe@gmail.com | password | John | NULL |
