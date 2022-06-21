@@ -12,8 +12,8 @@ import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
-//FIXME: login con invio
 //FIXME: PRECARICA DATABASE
+//FIXME: specifica perche un esame non è aggiungibile
 //FIXME: aggiungi commenti al codice!!!
 //FIXME: controlla che non ci siano warning
 //FIXME: compila readme
