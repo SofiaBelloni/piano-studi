@@ -1,5 +1,7 @@
 import { Table, Button } from 'react-bootstrap';
 import { useState } from 'react';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { MdOutlineExpandMore, MdExpandLess, MdOutlineAdd } from "react-icons/md";
 import './TableColor.css'
 
@@ -40,10 +42,10 @@ function ExamRow(props) {
   //render color table
   if (props.edit) {
     add = props.addable(props.exam.code); //return value of isAddable function
-   }
+  }
   return (
     <>
-      <tr className={add?add.value:null}><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={add} handleAdd={props.handleAdd} /></tr>
+      <tr className={add ? add.value : null}><ExamData exam={props.exam} expand={expand} moreInfo={moreInfo} edit={props.edit} addable={add} handleAdd={props.handleAdd} /></tr>
       {expand ? <ExamInfo exam={props.exam} /> : false}
     </>
   );
@@ -77,8 +79,12 @@ function ExamData(props) {
         {props.expand ? <MdExpandLess /> : <MdOutlineExpandMore />}</Button></td>
       {props.edit ?
         <td>
-          <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable.addable} ><MdOutlineAdd /></Button>
-        </td>
+          <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{props.addable.reason}</Tooltip>}>
+            <span className="d-inline-block">
+            <Button className='secondary' onClick={() => props.handleAdd(props.exam.code)} disabled={!props.addable.addable} ><MdOutlineAdd /></Button>
+            </span>
+          </OverlayTrigger>
+         </td>
         : false
 
       }

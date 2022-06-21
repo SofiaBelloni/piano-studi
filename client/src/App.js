@@ -13,7 +13,7 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 
 //FIXME: rileggere le specifiche
 //FIXME: PRECARICA DATABASE
-//FIXME: specifica perche un esame non è aggiungibile
+//FIXME: legenda
 //FIXME: aggiungi commenti al codice!!!
 //FIXME: controlla che non ci siano warning
 //FIXME: compila readme
@@ -46,7 +46,7 @@ function App2() {
   }
 
   const handleError = (err, msg) => {
-    console.log(err);
+    //console.log(err);  //uncomment for debugging
     setErrorMessage(msg);
   }
 

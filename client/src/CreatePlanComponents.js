@@ -1,6 +1,8 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { BackButton } from './Utility';
 import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents'
@@ -43,51 +45,56 @@ function CreatePlan(props) {
     const isAddable = (examId) => {
         //to add the exam you have to choose the type of the plan
         if (!enrollment)
-            return { addable: false, value: null };
+            return { addable: false, value: null, reason: "Per poter inserire gli esami devi prima scegliere il tipo di iscrizione" };
         const selectedExam = props.exams.find(e => e.code === examId);
         //to add an exam only once
         if (addedExams.find(e => e.code === examId))
-            return { addable: false, value: 'presence' };
+            return { addable: false, value: 'presence', reason: "Esame già presente" };
         //check cfu
         switch (enrollment) {
             case "fullTime":
                 if (selectedExam.cfu + cfu >= 80)
-                    return { addable: false, value: 'cfu' };
+                    return { addable: false, value: 'cfu', reason: "CFU liberi insufficienti" };
                 break;
             case "partTime":
                 if (selectedExam.cfu + cfu >= 40)
-                    return { addable: false, value: 'cfu' };
+                    return { addable: false, value: 'cfu', reason: "CFU liberi insufficienti" };
                 break;
             default:
         }
         //check prerequisite
         if (selectedExam.prerequisite !== null) {
             if (!addedExams.find(e => e.code === selectedExam.prerequisite))
-                return { addable: false, value: 'prerequisite' };
+                return { addable: false, value: 'prerequisite', reason: `L'esame ${selectedExam.prerequisite} è propedeutico per questo esame` };
         }
         //check incompatibility
         if (selectedExam.incompatibility[0] !== null) {
             let value = true;
+            let incID = null;
             selectedExam.incompatibility.forEach(inc => {
                 if (inc !== null && addedExams.find(e => e.code === inc)) {
                     value = false;
+                    incID = inc;
                 }
             });
             if (!value)
-                return { addable: false, value: 'incompatibility' };
+                return { addable: false, value: 'incompatibility', reason: `L'esame ${incID} è incompatibile con questo esame` };
         }
         //check max number of student
         if (selectedExam.maxStudent !== null && selectedExam.student >= selectedExam.maxStudent)
-            return { addable: false, value: 'max' };
-        return { addable: true, value: null };
+            return { addable: false, value: 'max', reason: "Massimo numero di iscritti raggiunto" };
+
+        return { addable: true, value: null, reason: "Aggiungi esame al piano di studio" };
     }
 
     //check if is possible to remove an exam with id examId from the study plan
     const isDeletable = (examId) => {
-        let value = true;
+        let value = { delete: true, reason: `Elimina dal piano di studio` };
         addedExams.forEach(ex => {
-            if (ex.prerequisite !== null && ex.prerequisite === examId)
-                value = false;
+            if (ex.prerequisite !== null && ex.prerequisite === examId) {
+                value.delete = false;
+                value.reason = `Esame propedeutico per ${ex.code}`;
+            }
         });
         return value;
     }
@@ -126,7 +133,7 @@ function CreatePlan(props) {
             {addedExams.length > 0 ?
                 <>
                     <PlanTable exams={addedExams} handleDelete={handleDelete} delete={isDeletable} edit={true} />
-                    <Save save={savePlan} setDirty={props.setDirty} add={handleSave} />
+                    <Save save={savePlan} setDirty={props.setDirty} add={handleSave} showInstruction={showInstruction} />
                     <br />
                 </>
                 : false}
@@ -166,10 +173,19 @@ function PlanType(props) {
 
 function Save(props) {
     const navigate = useNavigate();
+
+    const toSave = !props.save();
     return (
         <Row>
             <Col className='text-center'>
-                <Button className='mx-3 primary' onClick={() => props.add()} disabled={!props.save()}>Salva modifiche</Button>
+                {toSave ?
+                    <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{props.showInstruction()}</Tooltip>}>
+                        <span className="d-inline-block">
+                            <Button className='mx-3 primary' onClick={() => props.add()} disabled={toSave}>Salva modifiche</Button>
+                        </span>
+                    </OverlayTrigger>
+                    : <Button className='mx-3 primary' onClick={() => props.add()} disabled={toSave}>Salva modifiche</Button>
+                }
             </Col>
             <Col className='text-center'>
                 <Button className='mx-3 danger' variant="danger" onClick={() => { props.setDirty(true); navigate('/'); }}>Cancella modifiche</Button>
