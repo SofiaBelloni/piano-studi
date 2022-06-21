@@ -10,7 +10,7 @@ function MyNavbar(props) {
     <Navbar variant="dark" className='myNavBar'>
       <Container fluid>
         <Navbar.Brand><Button className='btn-lg icon' onClick={() => navigate(`/`)}><FaUniversity size='1.1em'/></Button>
-        {props.loggedIn ? "Bentornato, "+props.name
+        {props.loggedIn ? `Bentornato, ${props.name}`
             : "Piano degli studi"}
         </Navbar.Brand>
         

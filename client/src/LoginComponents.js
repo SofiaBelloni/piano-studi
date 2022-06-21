@@ -1,11 +1,11 @@
-import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { BackButton } from './Utility';
 import './ComponentsStyle.css'
 
 
 function LoginForm(props) {
-  const [username, setUsername] = useState('test@polito.it');
+  const [username, setUsername] = useState('sofiabelloni@polito.it');
   const [password, setPassword] = useState('password');
 
   const handleSubmit = (event) => {

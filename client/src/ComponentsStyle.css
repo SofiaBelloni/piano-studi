@@ -18,16 +18,10 @@
     background-color: #2E4C6D;
 }
 
-.icon, .icon:focus{
+.icon, .icon:focus, .icon:hover{
     background-color: transparent;
     border-color: transparent;
     margin-top: 0%;
-}
-
-
-.icon:hover{
-    background-color: transparent;
-    border-color: #2caedd;
 }
 
 .primary, .primary:focus{
