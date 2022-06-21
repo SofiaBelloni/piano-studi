@@ -1,7 +1,7 @@
 import { Container, Navbar, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUniversity } from "react-icons/fa";
-import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ComponentsStyle.css';
 
 function MyNavbar(props) {

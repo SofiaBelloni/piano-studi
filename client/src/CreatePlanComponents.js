@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import { BackButton } from './Utility';
 import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents'
-import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function CreatePlan(props) {
     const [addedExams, setAddedExams] = useState(props.studyPlan ? props.studyPlan : []);

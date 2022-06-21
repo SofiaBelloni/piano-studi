@@ -1,4 +1,4 @@
-import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Row, Col } from 'react-bootstrap';
 import { PlanTable } from './StudyPlanComponents';
 import { ExamTable } from './ExamComponents';
