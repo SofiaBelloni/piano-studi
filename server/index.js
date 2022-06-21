@@ -170,9 +170,9 @@ app.put('/api/enrollment', isLoggedIn, [
 //UPDATE increment student's number api/increment/students
 app.put('/api/increment/students', isLoggedIn, [
   check().custom((val, { req }) => {
-    return dao.getStudentNumber(req.user.id)
-    .then(number => {
-      for(const course of number){
+    return dao.listStudyPlan(req.user.id)
+    .then(studyPlan => {
+      for(const course of studyPlan){
         if (course.maxStudent !== null && course.student >= course.maxStudent)
           throw new Error(`Error: course ${course.code} reached max number of students`);
       }
@@ -194,9 +194,9 @@ app.put('/api/increment/students', isLoggedIn, [
 //UPDATE decrement student's number api/decrement/students
 app.put('/api/decrement/students', isLoggedIn, [
   check().custom((val, { req }) => {
-    return dao.getStudentNumber(req.user.id)
-    .then(number => {
-      for(const course of number){
+    return dao.listStudyPlan(req.user.id)
+    .then(studyPlan => {
+      for(const course of studyPlan){
         if (course.student - 1 < 0)
           throw new Error(`Error: course ${course.code} has not students enrolled`);
       }
