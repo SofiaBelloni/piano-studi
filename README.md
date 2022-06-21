@@ -1,11 +1,11 @@
-# Exam #12345: "Exam Title"
-## Student: s123456 LASTNAME FIRSTNAME 
+# Exam #12345: "Piano degli studi
+## Student: s303393 BELLONI SOFIA 
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: HomePage in cui viene mostrata la lista di tutti i corsi disponibili. Nel caso in cui l'utente abbia effettuato il login, viene mostrato (se presente) anche il piano di studio compilato dall'utente stesso.
+- Route `path=/login`: Schermata di login.
+- Route `path=/edit`: Schermata di aggiunta o modifica del piano di studi.
 
 ## API Server
 
