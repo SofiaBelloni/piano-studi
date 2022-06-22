@@ -173,21 +173,21 @@
 
 - Table `incompatibility`: contains `code1`, `code2`, i.e. codes of incompatible courses.
 
-- Table `studyPlan`: contains `id`, `code` where id is from users.id and code is from exams.code
+- Table `studyPlans`: contains `id`, `code` where id is from users.id and code is from exams.code
 - Table `users`: contains `id`, `email`, `name`, `hash`, `salt`, `enrollment` of each user.
 
 
 ## Main React Components
 
-- `HomePage` (in `HomePageComponents`): represent the home page with the table of all courses (ExamTable). If the user is logged in, it shows also the study plan (if present).
-- `CreatePlan` (in `CreatePlanComponents`): represents the edit page where the logged user can add or edit his study plan. 
+- `HomePage` (in `HomePageComponents.js`): represent the home page with the table of all courses (ExamTable). If the user is logged in, it shows also the study plan (if present).
+- `CreatePlan` (in `CreatePlanComponents.js`): represents the edit page where the logged user can add or edit his study plan. 
 - `ExamTable` (in `ExamComponents.js`): represent the table showing all courses.
 - `PlanTable` (in `StudyPlanComponents.js`): represent the table showing study plan's courses.
 - `LoginForm` (in `LoginComponents.js`): represents the form of the login.
 
 ## Screenshot
 
-![Screenshot](./EditPage.png)
+![Screenshot](./img/EditPage.png)
 
 ## Users Credentials
 
