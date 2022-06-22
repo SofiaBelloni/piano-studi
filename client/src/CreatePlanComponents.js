@@ -25,14 +25,31 @@ function CreatePlan(props) {
         let newExam = props.exams.find(e => e.code === examId);
         setAddedExams(oldFilms => [...oldFilms, newExam]);
         setCfu(old => old + newExam.cfu);
-        newExam.student += 1;
+        props.setExams(exams => exams.map(c => (c.code === newExam.code) ? {
+            code: c.code,
+            name: c.name,
+            cfu: c.cfu,
+            student: c.student + 1,
+            maxStudent: c.maxStudent,
+            prerequisite: c.prerequisite,
+            incompatibility: c.incompatibility
+        } : c));
     }
 
     //when an exam is removed from the studyPlan
     function handleDelete(examId) {
+        const examDel = props.exams.find(e => e.code === examId);
         setAddedExams(addedExams.filter(e => e.code !== examId));
-        setCfu(old => old - props.exams.find(e => e.code === examId).cfu);
-        props.exams.find(e => e.code === examId).student -= 1;
+        setCfu(old => old - examDel.cfu);
+        props.setExams(exams => exams.map(c => (c.code === examDel.code) ? {
+            code: c.code,
+            name: c.name,
+            cfu: c.cfu,
+            student: c.student - 1,
+            maxStudent: c.maxStudent,
+            prerequisite: c.prerequisite,
+            incompatibility: c.incompatibility
+        } : c));
     }
 
     //when the study plan is confirmed

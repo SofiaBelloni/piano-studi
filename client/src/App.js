@@ -86,6 +86,7 @@ function App2() {
     await API.logOut();
     setLoggedIn(false);
     setUser({});
+    setStudyPlan([]);
     navigate('/');
   }
 
@@ -159,7 +160,7 @@ function App2() {
             <Navigate to='/' />
             : <LoginForm login={doLogIn} setDirty={setDirty} setErrorMessage={setErrorMessage} />} />
           <Route path='/edit' element={loggedIn ?
-            <CreatePlan exams={exams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty} />
+            <CreatePlan exams={exams} setExams={setExams} studyPlan={studyPlan} user={user} save={addStudyPlan} setDirty={setDirty} />
             : <Navigate to='/login' />} />
           <Route path='*' element={<h1 className='text-center'>Page not found</h1>}> </Route>
         </Routes>
