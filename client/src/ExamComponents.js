@@ -27,7 +27,6 @@ function ExamTable(props) {
           }
         </tbody>
       </Table>
-      { }
     </>
   );
 }
@@ -87,7 +86,6 @@ function ExamData(props) {
           </OverlayTrigger>
         </td>
         : false
-
       }
     </>
   );

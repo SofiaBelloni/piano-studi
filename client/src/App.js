@@ -90,10 +90,11 @@ function App2() {
     navigate('/');
   }
 
+  //To delete studyplan from db
   const deleteStudyPlan = async () => {
-    API.decrementStudentsNumber()
-      .then(() => API.deleteStudyPlan())
-      .then(() => API.setEnrollmentNull())
+    API.decrementStudentsNumber() //decrement number of students enrolled
+      .then(() => API.deleteStudyPlan())  //delete study plan
+      .then(() => API.setEnrollmentNull()) //set enrollment null
       .then(() => {
         navigate('/');
         handleSuccess("Piano di studio eliminato correttamente");

@@ -13,7 +13,7 @@ function LoginForm(props) {
     props.setErrorMessage('');
     const credentials = { username, password };
 
-    // validetion
+    // validation that forms are not empty
     let valid = true;
     if (username === '') {
       valid = false;

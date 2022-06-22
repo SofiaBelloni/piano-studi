@@ -25,6 +25,7 @@ function CreatePlan(props) {
         let newExam = props.exams.find(e => e.code === examId);
         setAddedExams(oldFilms => [...oldFilms, newExam]);
         setCfu(old => old + newExam.cfu);
+        //update number of student enrolled
         props.setExams(exams => exams.map(c => (c.code === newExam.code) ? {
             code: c.code,
             name: c.name,
@@ -41,6 +42,7 @@ function CreatePlan(props) {
         const examDel = props.exams.find(e => e.code === examId);
         setAddedExams(addedExams.filter(e => e.code !== examId));
         setCfu(old => old - examDel.cfu);
+        //update number of student enrolled
         props.setExams(exams => exams.map(c => (c.code === examDel.code) ? {
             code: c.code,
             name: c.name,
@@ -100,7 +102,7 @@ function CreatePlan(props) {
         //check max number of student
         if (selectedExam.maxStudent !== null && selectedExam.student >= selectedExam.maxStudent)
             return { addable: false, value: 'max', reason: "Massimo numero di iscritti raggiunto" };
-
+        
         return { addable: true, value: null, reason: "Aggiungi esame al piano di studio" };
     }
 
@@ -171,7 +173,6 @@ function TotCFU(props) {
 }
 
 function PlanType(props) {
-
     return (
         <>
             <Form.Group as={Row} className="my-3">

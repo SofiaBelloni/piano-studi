@@ -1,8 +1,10 @@
-import { BrowserRouter as Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Row, Col } from 'react-bootstrap';
 import { MdArrowBack } from "react-icons/md";
 import './ComponentsStyle.css'
 
+
+//Back button component
 function BackButton(props){
     const navigate = useNavigate();
 

@@ -7,7 +7,7 @@ const dao = require('./dao'); // module for accessing the DB
 const userDao = require('./user-dao'); // module for accessing the users in the DB
 const cors = require('cors');
 const passport = require('passport'); // auth middleware
-const LocalStrategy = require('passport-local').Strategy; // username and password for login
+const LocalStrategy = require('passport-local').Strategy; // for login
 const session = require('express-session'); // enable sessions
 
 // init express
@@ -227,7 +227,8 @@ app.post('/api/studyplan', isLoggedIn, [
         const studyPlan = courses.filter(c => {
           return studyPlanCodes.some(s => { return s === c.code });
         })
-        //check that there are all courses' code in the db
+        //check that there are all courses' code in the db 
+        //and that each code is present only once
         if (studyPlan.length !== studyPlanCodes.length) {
           throw new Error("There is a course code not valid");
         }

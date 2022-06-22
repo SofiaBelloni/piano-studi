@@ -6,7 +6,6 @@ import { MdOutlineAdd, MdDeleteForever, MdEditNote } from "react-icons/md";
 import './ComponentsStyle.css';
 
 function HomePage(props) {
-
     //compute the number of cfu of the current study plan
     function computeCFU() {
         let cfu = 0;
