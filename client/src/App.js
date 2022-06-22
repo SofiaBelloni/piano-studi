@@ -56,14 +56,14 @@ function App2() {
     checkAuth();
     API.getAllCourses()
       .then((exams) => { setExams(exams); setDirty(false); })
-      .catch(err => handleError(err, ""))
+      .catch(err => handleError(err, "Errore nel caricamento dei corsi"))
   }, [dirty])
 
   useEffect(() => {
     if (loggedIn)
       API.getStudyPlan()
         .then((courses) => { setStudyPlan(courses); setDirty(false); })
-        .catch(err => handleError(err, ""))
+        .catch(err => handleError(err, "Errore nel caricamento del piano di studio"))
   }, [loggedIn, dirty])
 
   const doLogIn = (credentials) => {
