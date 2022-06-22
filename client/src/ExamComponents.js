@@ -107,7 +107,7 @@ function ColorLegend() {
           </tr>
           <tr className='legend'>
             <td><span className="prerequisite" /></td>
-            <td>E' presente un esame propedeutico</td>
+            <td>E' richiesto un esame propedeutico</td>
             <td><span className="max" /></td>
             <td>Massimo numero di iscritti raggiunto</td>
             <td></td>
