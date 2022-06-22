@@ -11,9 +11,6 @@ import { CreatePlan } from './CreatePlanComponents';
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
-//FIXME: aggiungi commenti al codice!!!
-//FIXME: foto readme
-
 function App() {
   return (
     <Router>
