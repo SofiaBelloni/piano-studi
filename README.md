@@ -1,4 +1,4 @@
-# Exam #1: "Piano degli studi"
+# "Piano degli studi"
 ## Student: s303393 BELLONI SOFIA 
 
 ## React Client Application Routes
